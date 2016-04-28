@@ -1,0 +1,22 @@
+%MAX_RECUR_LEVEL = 8
+%MAX_ELEMENT_NUM = 15
+
+NUM == 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+OP  == +, -, \times, /, \div
+DOT == .
+EQ  == =
+SQRT1 == #C\sqrt{
+SQRT2 == }C#
+
+S => EXP, OP, EXP, EQ
+S => EXP, OP, EXP
+
+EXP => EXP, OP, EXP
+EXP => NUMSTR
+EXP => DECIMAL
+EXP => SQRT1, NUMSTR, SQRT2
+
+DECIMAL => NUMSTR, DOT, NUMSTR
+
+NUMSTR => NUMSTR, NUM
+NUMSTR => NUM

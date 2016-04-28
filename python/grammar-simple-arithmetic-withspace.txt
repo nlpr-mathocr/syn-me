@@ -1,0 +1,27 @@
+%MAX_RECUR_LEVEL = 10
+%MAX_ELEMENT_NUM = 15
+
+NUM == 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+OP  == +, -, \times, /, \div, =
+DOT == .
+SPC == #NC\;, #NC\%20, #NC\%2C
+
+S => EXP, OP_SPC, EXP
+DOT_SPC => SPC, DOT, SPC
+DOT_SPC => SPC, DOT
+DOT_SPC => DOT, SPC
+DOT_SPC => DOT
+OP_SPC => SPC, OP, SPC
+OP_SPC => SPC, OP
+OP_SPC => OP, SPC
+OP_SPC => OP
+
+
+EXP => EXP, OP_SPC, EXP
+EXP => NUMSTR
+EXP => DECIMAL
+
+DECIMAL => NUMSTR, DOT_SPC, NUMSTR
+
+NUMSTR => NUMSTR, NUM
+NUMSTR => NUM
