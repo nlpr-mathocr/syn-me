@@ -1,4 +1,4 @@
-function [  ] =zhuanhua( )
+function [] =convert_im2uint8()
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 im_num = length(dir('color-tex/*.png'));
