@@ -1,0 +1,46 @@
+%MAX_ELEMENT_NUM = 30
+%MAX_RECUR_LEVEL = 30
+OPNAME1 == #NC\operatorname{
+OPNAME2 == #NC}
+
+LETTER_LOW_E == e
+LETTER_LOW_X == x
+LETTER_LOW_P == p
+LETTER_LOW_D == d
+LETTER_LOW_I == i
+LETTER_LOW_M == m
+LETTER_LOW_A == a
+LETTER_LOW_N == n
+LETTER_BIG_I == I
+LETTER_BIG_R == R
+
+EXP1 => LETTER_LOW_E, LETTER_LOW_X, LETTER_LOW_P
+DIM => LETTER_LOW_D, LETTER_LOW_I, LETTER_LOW_M
+RE => LETTER_BIG_R, LETTER_LOW_E
+IM => LETTER_BIG_I, LETTER_LOW_M
+MIN => LETTER_LOW_M, LETTER_LOW_I, LETTER_LOW_N
+MAX => LETTER_LOW_M, LETTER_LOW_A, LETTER_LOW_X
+
+LEFT_PAR == \left[
+RIGHT_PAR == \right]
+
+LETTER == a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
+NUM == \mathbb{C}, \mathbb{Z}, \mathbb{N}, \mathbb{B}, \mathbb{P}, \varrho, \nu, \phi, \varphi, \psi, \vartheta, \Gamma, \Lambda, \Delta, \Phi, \Theta, \Omega, \Psi, \alpha, \beta, \gamma, \delta, \epsilon, \zeta, \eta, \theta, \lambda, \mu, \rho, \sigma, \omega
+OP  == \triangledown, ', *, ;, !, ?, \mid, \parallel, \in, \subset, \notin, \sim, \equiv, \not\equiv, \cong, \bigoplus, \bigotimes, \coprod, \infty, \partial, \perp, \text{-}
+SPACE == \;  
+
+
+TRIOP => OPNAME1, EXP1, OPNAME2
+TRIOP => OPNAME1, DIM, OPNAME2
+TRIOP => OPNAME1, RE, OPNAME2
+TRIOP => OPNAME1, IM, OPNAME2
+TRIOP => OPNAME1, MIN, OPNAME2
+TRIOP => OPNAME1, MAX, OPNAME2
+
+NUMSTR => NUM
+NUMSTR => NUMSTR1, NUM
+NUMSTR1 => NUM
+
+SE => EXP, SPACE, OP, SPACE, EXP
+EXP => TRIOP, LEFT_PAR, LETTER, OP, NUMSTR, RIGHT_PAR  
+

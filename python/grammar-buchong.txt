@@ -1,0 +1,20 @@
+%MAX_ELEMENT_NUM = 30
+%MAX_RECUR_LEVEL = 30
+
+LETTER == \tau, \xi, \chi, \kappa, \upsilon, \varepsilon, \Sigma, \Pi, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z 
+OP == \cdot, \subseteq, \backslash, \wedge, \supset, \pm, \supseteq, \prec, \bigwedge, \rtimes, \preceq, \forall, \cup, \oplus, \cap 
+EQ == \leqq, \geqq, \langle, \rangle, \simeq
+
+LINE1 == #C\overline{
+LINE2 == }C#
+VEC1 == #C\vec{ 
+VEC2 == }C#
+SPACE == \;  
+
+SE => EXP, SPACE, OP, SPACE, EXP, SPACE, EQ
+EXP => NUMSTR 
+EXP => LINE1, NUMSTR, LINE2
+EXP => VEC1, LETTER, VEC2
+
+NUMSTR => LETTER
+NUMSTR => NUMSTR, SPACE, LETTER

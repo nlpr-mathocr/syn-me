@@ -1,0 +1,35 @@
+%MAX_ELEMENT_NUM = 30
+%MAX_RECUR_LEVEL = 30
+OPNAME1 == #NC\operatorname{
+OPNAME2 == #NC}
+
+LETTER_LOW_L == l
+LETTER_LOW_I == i
+LETTER_LOW_M == m
+
+LIM => LETTER_LOW_L, LETTER_LOW_I, LETTER_LOW_M
+
+LEFT_PAR == (
+RIGHT_PAR == )
+
+LETTER == a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
+NUM == 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+OP  == +, -, \times, \div
+JIXIAN == x
+ARROW == \rightarrow
+UNDER1 == #C\underset{
+UNDER2 == #NC}{
+UNDER3 == }C#
+
+
+TRIOP => OPNAME1, LIM, OPNAME2
+UNDER => UNDER1, JIXIAN, ARROW, NUM, UNDER2, TRIOP, UNDER3
+
+NUMSTR => NUM
+NUMSTR => NUMSTR1, NUM
+NUMSTR1 => NUM
+
+SE => EXP, OP, EXP
+EXP => NUMSTR
+EXP => UNDER, LEFT_PAR, JIXIAN, OP, NUMSTR, RIGHT_PAR  
+EXP => LETTER

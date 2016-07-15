@@ -1,0 +1,28 @@
+%MAX_RECUR_LEVEL = 8
+%MAX_ELEMENT_NUM = 15
+
+NUM == 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+OP  == +, -, \times, /, \div, \blacksquare, \square, \blacktriangle, \triangle, \bigcirc, :, \cdots
+DOT == .
+EQ  == =, >, <, \geq, \geqslant, \leq, \leqslant, \neq, \ngtr, \nless, \ngeq, \ngeqslant, \nleq, \nleqslant, \approx
+SQRT1 == #C\sqrt{
+SQRT2 == }C#
+BAIFEN == \%
+LETTER == a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, T, U, V, W, X, Y, Z
+TEXT1 == #C\text{
+TEXT2 == }C#
+
+SE => TEXT1, EXP, OP, EXP, EQ, TEXT2
+
+
+EXP => EXP, OP, EXP
+EXP => LETTER
+EXP => NUMSTR, BAIFEN
+EXP => NUMSTR
+EXP => DECIMAL
+EXP => SQRT1, NUMSTR, SQRT2
+
+DECIMAL => NUMSTR, DOT, NUMSTR
+
+NUMSTR => NUMSTR, NUM
+NUMSTR => NUM

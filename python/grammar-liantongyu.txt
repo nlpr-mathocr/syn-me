@@ -1,0 +1,48 @@
+%MAX_ELEMENT_NUM = 10
+%MAX_RECUR_LEVEL = 15
+
+LETTER == 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, T, U, V, W, X, Y, Z
+OP == +, -, \times, /, \div, =, >, <, \geq, \ngeqslant, \leq, \leqslant, \neq, \ngtr, \nless, \ngeq, \ngeqslant, \nleq, \nleqslant, \approx, ., :, \cdots, \pi, \blacksquare, \square, \blacktriangle, \triangle, \bigcirc 
+OP1 == \left(, \right), \left[, \right], \alpha, \beta, \gamma, \delta, \epsilon, \zeta, \eta, \theta, \lambda, \mu, \rho, \sigma, \omega 
+OP2 == \rightarrow, \leftarrow, \Leftarrow, \Rightarrow, \leftrightarrow, \Leftrightarrow, \leftharpoonup, \rightharpoonup, \leftharpoondown, \rightharpoondown, \leftrightharpoons, \rightleftharpoons, \mapsto
+OP3 == \varrho, \nu, \phi, \varphi, \psi, \vartheta, \Gamma, \Lambda, \Delta, \Phi, \Theta, \Omega, \Psi, \mathbb{C}, \mathbb{Z}, \mathbb{N}, \mathbb{B}, \mathbb{P}
+OP4 == ', *, ;, !, ?, \mid, \parallel, \in, \subset, \notin, \sim, \equiv, \not\equiv, \cong, \bigoplus, \bigotimes, \coprod, \triangledown, \infty, \partial, \perp, \text{-} 
+OP5 == \%
+HAT1 == #C\widehat{
+HAT2 == }C#
+TIL1 == #C\widetilde{ 
+TIL2 == }C#
+FRAC1 == #C\frac{
+FRAC2 == #NC}{
+FRAC3 == }C#
+SQRT1 == #C\sqrt{
+SQRT2 == }C#
+INT1 == #C\int_{
+INT2 == #NC}^{
+INT3 == }C#
+PROD1 == #C\prod_{
+PROD2 == #NC}^{
+PROD3 == }C#
+SUM1 == #C\sum_{
+SUM2 == #NC}^{
+SUM3 == }C#
+CAP1 == #C\bigcap_{
+CAP2 == #NC}^{
+CAP3 == }C#
+CUP1 == #C\bigcup_{
+CUP2 == #NC}^{
+CUP3 == }C#
+
+SE => EXP, OP, EXP
+EXP => CUP1, LETTER, CUP2, OP, CUP3
+EXP => CAP1, LETTER, CAP2, OP1, CAP3
+EXP => SUM1, LETTER, SUM2, OP2, SUM3
+EXP => PROD1, LETTER, PROD2, OP3, PROD3
+EXP => INT1, LETTER, INT2, OP4, INT3
+EXP => FRAC1, LETTER, FRAC2, OP3, FRAC3
+EXP => SQRT1, NUMSTR, SQRT2
+EXP => HAT1, NUMSTR, HAT2
+EXP => TIL1, NUMSTR, TIL2
+
+NUMSTR => OP, LETTER
+NUMSTR => OP5

@@ -1,0 +1,22 @@
+%MAX_ELEMENT_NUM = 10
+%MAX_RECUR_LEVEL = 15
+
+LETTER == \varrho, \nu, \phi, \varphi, \psi, \vartheta, \Gamma, \Lambda, \Delta, \Phi, \Theta, \Omega, \Psi
+NEWLETTER == \mathbb{C}, \mathbb{Z}, \mathbb{N}, \mathbb{B}, \mathbb{P}
+OP == ', *, ;, !, ?, \mid, \parallel, \in, \subset, \notin, \sim, \equiv, \not\equiv, \cong, \bigoplus, \bigotimes, \coprod, \triangledown, \infty, \partial, \perp
+LEFT_PAR == \left\{
+RIGHT_PAR == \right\}
+HAT1 == #C\widehat{
+HAT2 == }C#
+TIL1 == #C\widetilde{ 
+TIL2 == }C#
+SPACE == \;  
+
+SE => EXP, SPACE, OP, SAPCE, EXP
+EXP => NUMSTR
+EXP => LEFT_PAR, NUMSTR, RIGHT_PAR  
+EXP => HAT1, NUMSTR, HAT2
+EXP => TIL1, NUMSTR, TIL2
+
+
+NUMSTR => LETTER, SPACE, LETTER

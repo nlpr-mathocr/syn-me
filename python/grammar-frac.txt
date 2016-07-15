@@ -1,0 +1,17 @@
+%MAX_ELEMENT_NUM = 10
+%MAX_RECUR_LEVEL = 10
+
+NUM == 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+FRAC1 == #C\frac{
+FRAC2 == #NC}{
+FRAC3 == }C#
+
+S => EXP
+
+EXP => FRAC1, EXP, FRAC2, EXP, FRAC3
+EXP => NUMSTR
+NUMSTR => NUMSTR, NUM
+NUMSTR => NUM
+
+
+

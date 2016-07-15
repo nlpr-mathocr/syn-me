@@ -1,0 +1,12 @@
+%MAX_ELEMENT_NUM = 7
+%MAX_RECUR_LEVEL = 10
+
+NUM == 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+
+SQRT1 == #C\sqrt{
+SQRT2 == }C#
+
+SE => SQRT1, NUMSTR, SQRT2
+
+NUMSTR => NUMSTR, NUM
+NUMSTR => NUM

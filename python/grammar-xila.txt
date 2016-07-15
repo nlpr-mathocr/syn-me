@@ -1,0 +1,17 @@
+%MAX_RECUR_LEVEL = 5
+%MAX_ELEMENT_NUM = 15
+
+NUM == 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+OP  == +, -, \times, \div
+EQ  == =, >, <, \geq, \geqslant, \leq, \leqslant, \neq, \ngtr, \nless, \ngeq, \ngeqslant, \nleq, \nleqslant, \approx
+XILA == \alpha, \beta, \gamma, \delta, \epsilon, \zeta, \eta, \theta, \lambda, \mu, \rho, \sigma, \omega  
+
+SE => EXP, OP, EXP, EQ
+SE => EXP, OP, EXP
+
+EXP => EXP, OP, EXP
+EXP => XILA
+EXP => NUMSTR
+
+NUMSTR => NUMSTR, NUM
+NUMSTR => NUM
