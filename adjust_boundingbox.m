@@ -1,5 +1,4 @@
 function adjust_boundingbox(data_num,im_num)
-clear; close all; clc
 color_bbox=[data_num,'bbox-config/'];
 color_adjust=[data_num,'adjust-bbox-config/'];
 if ~isdir(color_adjust)
