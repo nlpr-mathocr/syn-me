@@ -1,5 +1,4 @@
 function regular_imageformat(data_num,im_num,convert)
-clear; clc
 color_tex=[data_num,'color-tex/'];
 color_uint8=[data_num,'color-tex-uint8/'];
 color_regular=[data_num,'color-tex-regular/'];
