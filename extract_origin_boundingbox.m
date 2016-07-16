@@ -1,5 +1,4 @@
 function extract_origin_boundingbox(data_num,im_num)
-clear; close all; clc
 color_regular=[data_num,'color-tex-regular/'];
 color_config=[data_num,'tex_config/'];
 color_bbox=[data_num,'bbox-config/'];
@@ -26,7 +25,7 @@ parfor i = 1 : im_num
         end
         labelmap = bwlabel(labelmap);
         
-        % process for i j = ~= >= <= % : ¡Â ...
+        % process for i j = ~= >= <= % : Ã· ...
         
         if label == 19 || label == 20 || label == 67 || label == 68 || ...
                 (label >= 71 && label <= 74) || label == 82 || label == 84 || ...
@@ -57,7 +56,7 @@ parfor i = 1 : im_num
                 break
             end
             if label == 67 % div
-                % ÕÒµ½ÖÐ¼äµÄºáÏß
+                % æ‰¾åˆ°ä¸­é—´çš„æ¨ªçº¿
                 centerlines = {};
                 points = {};
                 for j = 1 : size(bbox, 1)
@@ -81,21 +80,21 @@ parfor i = 1 : im_num
                     center_box = centerlines{j, :};
                     centerx = (center_box(2) + center_box(4)) / 2;
                     centery = (center_box(1) + center_box(3)) / 2;
-                    tmp_pair = [j, 1, 1]; % ÖÐÐÄÏß£¬ÉÏµã£¬ÏÂµã
+                    tmp_pair = [j, 1, 1]; % ä¸­å¿ƒçº¿ï¼Œä¸Šç‚¹ï¼Œä¸‹ç‚¹
                     min_down_dis = 100000;
                     min_up_dis = 100000;
-                    for k = 1 : size(points, 1) % ºáÏßÉÏÏÂ·Ö±ðÕÒ¸ö×î½üµÄµã
+                    for k = 1 : size(points, 1) % æ¨ªçº¿ä¸Šä¸‹åˆ†åˆ«æ‰¾ä¸ªæœ€è¿‘çš„ç‚¹
                         if used_points(k)
                             continue
                         end
                         point_bbox = points{k, :};
-                        if (point_bbox(1) + point_bbox(3)) / 2 < centery % Î»ÓÚÉÏÃæµÄµã
+                        if (point_bbox(1) + point_bbox(3)) / 2 < centery % ä½äºŽä¸Šé¢çš„ç‚¹
                             tmpdis = abs((point_bbox(1) + point_bbox(3)) / 2 - centery) + abs((point_bbox(2) + point_bbox(4)) / 2 - centerx);
                             if tmpdis < min_up_dis
                                 min_up_dis = tmpdis;
                                 tmp_pair(2) = k;
                             end
-                        else % Î»ÓÚÏÂÃæµÄµã
+                        else % ä½äºŽä¸‹é¢çš„ç‚¹
                             tmpdis = abs((point_bbox(1) + point_bbox(3)) / 2 - centery) + abs((point_bbox(2) + point_bbox(4)) / 2 - centerx);
                             if tmpdis < min_down_dis
                                 min_down_dis = tmpdis;
@@ -142,7 +141,7 @@ parfor i = 1 : im_num
                     end
                     near_pair = [near_pair; tmp_pair];
                 end
-                % ÕÒµ½ÖÐÐÄµã
+                % æ‰¾åˆ°ä¸­å¿ƒç‚¹
                 index_count = zeros(1, size(near_pair, 1));
                 for j = 1 : size(near_pair, 1)
                     index_count(near_pair(j, 2)) = index_count(near_pair(j, 2)) + 1;
@@ -239,7 +238,7 @@ parfor i = 1 : im_num
             
             tmp_used = zeros(1, length(unique_color));
             
-            for color_id = 1 : length(unique_color) % ±éÀúÃ¿Ò»¸öÁ¬Í¨²¿¼þ
+            for color_id = 1 : length(unique_color) % éåŽ†æ¯ä¸€ä¸ªè¿žé€šéƒ¨ä»¶
                 if tmp_used(color_id) > 0
                     continue;
                 end
