@@ -1,5 +1,4 @@
 function distort_formulas(data_num,im_num)
-clear; close all; clc
 color_regular=[data_num,'color-tex-regular/'];
 color_gray=[data_num,'gray-tex-images/'];
 color_affine=[data_num,'affine-param/'];
@@ -77,7 +76,7 @@ parfor i = 1 : im_num
 %     [height width channel]=size(tmp_im);
     rh=max(ceil(rand(1)*(target_h-height)),1);
     rw=max(ceil(rand(1)*(target_w-width)),1);
-    rw1=max(ceil((target_w-width)/2),1);%原来的高度和长度
+    rw1=max(ceil((target_w-width)/2),1);%脭颅脌麓碌脛赂脽露脠潞脥鲁陇露脠
     rh1=max(ceil((target_h-height)/2),1);
     T=[sx1,theta,(rw-rw1)/target_w,(rh-rh1)/target_h,shx,shy];
 %     fprintf(fid,'%s ',imname);
