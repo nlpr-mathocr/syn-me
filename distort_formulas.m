@@ -76,7 +76,7 @@ parfor i = 1 : im_num
 %     [height width channel]=size(tmp_im);
     rh=max(ceil(rand(1)*(target_h-height)),1);
     rw=max(ceil(rand(1)*(target_w-width)),1);
-    rw1=max(ceil((target_w-width)/2),1);%Ô­À´µÄ¸ß¶ÈºÍ³¤¶È
+    rw1=max(ceil((target_w-width)/2),1);%原来的高度和长度
     rh1=max(ceil((target_h-height)/2),1);
     T=[sx1,theta,(rw-rw1)/target_w,(rh-rh1)/target_h,shx,shy];
 %     fprintf(fid,'%s ',imname);
@@ -116,24 +116,31 @@ parfor i = 1 : im_num
 		im = uint8(im);
 		imwrite(im, [color_gray, imname], 'jpg');      
     end
-%     %% distort bounding box
-%     bbox_config = load(strcat('bbox-config/bbox_', num2str(i), '.config'));
-%     [row col]=size(bbox_config);
-%     distort_config=[];
-%     for j=1:row
+%    origin bounding box
+%       distort_config=[];   
+%       for j=1:row
 %        point=[bbox_config(j,3),bbox_config(j,2);
 %               bbox_config(j,3),bbox_config(j,4);
 %               bbox_config(j,5),bbox_config(j,2);
 %               bbox_config(j,5),bbox_config(j,4)];
-%        target_point = tformfwd(point,tform);          
-%        target_point(:,1)= target_point(:,1) - xdata(1)+rw;
-%        target_point(:,2)= target_point(:,2) - ydata(1)+rh;
+%        target_point = tformfwd(point,gtform);          
+%        target_point(:,1)= target_point(:,1) - gxdata(1)+(target_w-gwidth)/2;
+%        target_point(:,2)= target_point(:,2) - gydata(1)+(target_h-gheight)/2;
 %        target_point=ceil(target_point);
-%        distort_config=[distort_config;bbox_config(j,1),target_point(1,2),target_point(1,1),target_point(3,2),target_point(3,1),target_point(4,2),target_point(4,1),target_point(2,2),target_point(2,1)] ;
-%     end     
-%     dlmwrite(strcat('distort-bbox-config/bbox_', num2str(i), '.config') ,distort_config, 'delimiter', '\t');    
-%    %% distort adjust bounding box
-     distort_config=[];    
+%        if bbox_config(j,1)~=98
+%          distort_config=[distort_config;bbox_config(j,1),target_point(1,2),target_point(1,1),target_point(3,2),target_point(3,1),target_point(4,2),target_point(4,1),target_point(2,2),target_point(2,1),roundn((target_point(1,1)+target_point(3,1))/2,-1),roundn((target_point(1,2)+target_point(4,2))/2,-1)] ;
+%        else
+%          center_point=[bbox_config(j,6),bbox_config(j,7)];
+%          new_point = tformfwd(center_point,gtform);
+%          new_point(:,1)= new_point(:,1) - gxdata(1)+(target_w-gwidth)/2;
+%          new_point(:,2)= new_point(:,2) - gydata(1)+(target_h-gheight)/2;
+%          new_point=roundn(new_point,-1);
+%          distort_config=[distort_config;bbox_config(j,1),target_point(1,2),target_point(1,1),target_point(3,2),target_point(3,1),target_point(4,2),target_point(4,1),target_point(2,2),target_point(2,1),new_point(1),new_point(2)] ;
+%        end
+%        end          
+%      dlmwrite([color_distort,'bbox_', num2str(i), '.config'] ,distort_config, 'delimiter', '\t');
+%   distort bounding box
+    distort_config=[];    
     for j=1:row
        point=[bbox_config(j,3),bbox_config(j,2);
               bbox_config(j,3),bbox_config(j,4);
@@ -148,8 +155,8 @@ parfor i = 1 : im_num
        else
          center_point=[bbox_config(j,6),bbox_config(j,7)];
          new_point = tformfwd(center_point,tform);
-         new_point(:,1)= new_point(:,1) - xdata(1)+(target_w-width)/2;
-         new_point(:,2)= new_point(:,2) - ydata(1)+(target_h-height)/2;
+         new_point(:,1)= new_point(:,1) - xdata(1)+rw;
+         new_point(:,2)= new_point(:,2) - ydata(1)+rh;
          new_point=roundn(new_point,-1);
          distort_config=[distort_config;bbox_config(j,1),target_point(1,2),target_point(1,1),target_point(3,2),target_point(3,1),target_point(4,2),target_point(4,1),target_point(2,2),target_point(2,1),new_point(1),new_point(2)] ;
        end
