@@ -21,7 +21,7 @@ target_w = 512;
 
 parfor i = 1 : im_num
     im = imread([color_regular, num2str(i), '.png']);
-    imname =['1_',num2str(i),'.jpg'];
+    imname =[num2str(i),'.jpg'];
 %     im = imdilate(im, template1);
 %     [ori_h, ori_w, ~] = size(im);
     target_im = zeros(target_h, target_w, 3);
@@ -140,8 +140,8 @@ parfor i = 1 : im_num
               bbox_config(j,5),bbox_config(j,2);
               bbox_config(j,5),bbox_config(j,4)];
        target_point = tformfwd(point,tform);          
-       target_point(:,1)= target_point(:,1) - xdata(1)+(target_w-width)/2;
-       target_point(:,2)= target_point(:,2) - ydata(1)+(target_h-height)/2;
+       target_point(:,1)= target_point(:,1) - xdata(1)+rw;
+       target_point(:,2)= target_point(:,2) - ydata(1)+rh;
        target_point=ceil(target_point);
        if bbox_config(j,1)~=98
          distort_config=[distort_config;bbox_config(j,1),target_point(1,2),target_point(1,1),target_point(3,2),target_point(3,1),target_point(4,2),target_point(4,1),target_point(2,2),target_point(2,1),roundn((target_point(1,1)+target_point(3,1))/2,-1),roundn((target_point(1,2)+target_point(4,2))/2,-1)] ;
@@ -156,5 +156,4 @@ parfor i = 1 : im_num
     end          
      dlmwrite([color_distort,'bbox_', num2str(i), '.config'] ,distort_config, 'delimiter', '\t');
 end
- fclose(fid);
 end
