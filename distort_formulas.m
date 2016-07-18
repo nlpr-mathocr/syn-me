@@ -76,9 +76,9 @@ parfor i = 1 : im_num
 %     [height width channel]=size(tmp_im);
     rh=max(ceil(rand(1)*(target_h-height)),1);
     rw=max(ceil(rand(1)*(target_w-width)),1);
-    rw1=max(ceil((target_w-gwidth)/2),1);%原来的高度和长度
-    rh1=max(ceil((target_h-gheight)/2),1);
-    T=[sx1,theta,(rw-rw1)/target_w,(rh-rh1)/target_h,shx,shy];
+    rw1=max(ceil((target_w-width)/2),1);%原来的高度和长度
+    rh1=max(ceil((target_h-height)/2),1);
+    T=[sx1,theta,2*(rw-rw1)/target_w,2*(rh-rh1)/target_h,shx,shy];
 %     fprintf(fid,'%s ',imname);
 %     for j=1:6
 %     fprintf(fid,'%g ',T(j));
