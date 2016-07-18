@@ -139,7 +139,7 @@ parfor i = 1 : im_num
               bbox_config(j,3),bbox_config(j,4);
               bbox_config(j,5),bbox_config(j,2);
               bbox_config(j,5),bbox_config(j,4)];
-       target_point = tformfwd(point,gtform);          
+       target_point = tformfwd(point,tform);          
        target_point(:,1)= target_point(:,1) - xdata(1)+(target_w-width)/2;
        target_point(:,2)= target_point(:,2) - ydata(1)+(target_h-height)/2;
        target_point=ceil(target_point);
@@ -147,7 +147,7 @@ parfor i = 1 : im_num
          distort_config=[distort_config;bbox_config(j,1),target_point(1,2),target_point(1,1),target_point(3,2),target_point(3,1),target_point(4,2),target_point(4,1),target_point(2,2),target_point(2,1),roundn((target_point(1,1)+target_point(3,1))/2,-1),roundn((target_point(1,2)+target_point(4,2))/2,-1)] ;
        else
          center_point=[bbox_config(j,6),bbox_config(j,7)];
-         new_point = tformfwd(center_point,gtform);
+         new_point = tformfwd(center_point,tform);
          new_point(:,1)= new_point(:,1) - xdata(1)+(target_w-width)/2;
          new_point(:,2)= new_point(:,2) - ydata(1)+(target_h-height)/2;
          new_point=roundn(new_point,-1);
