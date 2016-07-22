@@ -9,6 +9,10 @@ function [adj_bboxes] = adjust_bb_basedon_label(label, bbox) % top left bottom r
     label_div   = 67;
     label_cdot = 179;
     label_line = 177;
+    label_comma = 148;
+    label_mid = 156;
+    label_shortminus = 174;
+    label_sim = 155;
     
     if label == label_num_1
         adj_bboxes = adjust_num_1_bbox(bbox);
@@ -28,6 +32,14 @@ function [adj_bboxes] = adjust_bb_basedon_label(label, bbox) % top left bottom r
         adj_bboxes = adjust_cdot_bbox(bbox);
     elseif label == label_line
         adj_bboxes = adjust_line_bbox(bbox);
+    elseif label == label_comma
+        adj_bboxes = adjust_comma_bbox(bbox);
+    elseif label == label_mid
+        adj_bboxes = adjust_mid_bbox(bbox);
+    elseif label == label_shortminus
+        adj_bboxes = adjust_short_bbox(bbox);
+    elseif label == label_sim
+        adj_bboxes = adjust_sim_bbox(bbox);
     else
         adj_bboxes = bbox;
     end
@@ -91,11 +103,60 @@ function [adjt_bbox] = adjust_line_bbox(bbox)
     adjt_bbox = [new_top, left, new_bottom, right];
 end
 
+function [adjt_bbox] = adjust_sim_bbox(bbox)
+        % expand vertically.
+    vert_scale_ratio = 0.5;
+    top    = bbox(1);
+    left   = bbox(2);
+    bottom = bbox(3);
+    right  = bbox(4);
+    height = bottom - top + 1;
+    new_height = height * vert_scale_ratio;
+    new_top     = top - new_height+ 1;
+    new_bottom  = bottom+new_height; 
+    adjt_bbox = [new_top, left, new_bottom, right];
+end
+
+function [adjt_bbox] = adjust_mid_bbox(bbox)
+        % expand vertically.
+    horz_scale_ratio = 1;
+    top    = bbox(1);
+    left   = bbox(2);
+    bottom = bbox(3);
+    right  = bbox(4);
+    width = right - left + 1;
+    new_width = width * horz_scale_ratio;
+    new_left = left - new_width + 1;
+    new_right = right + new_width;
+    adjt_bbox = [top, new_left, bottom, new_right];
+end
+
+function [adjt_bbox] = adjust_comma_bbox(bbox)
+    vert_scale_ratio = 0.5;
+    horz_scale_ratio = 0.5;
+    top    = bbox(1);
+    left   = bbox(2);
+    bottom = bbox(3);
+    right  = bbox(4);
+    height = bottom - top + 1;
+    width = right - left + 1;
+    new_height = height * vert_scale_ratio;
+    new_width = width * horz_scale_ratio;
+    new_top     = top - new_height + 1;
+    new_bottom  = bottom; 
+    new_left = left - new_width + 1;
+    new_right = right + new_width;
+    adjt_bbox = [new_top, new_left, new_bottom, new_right];
+end
 function [adjt_bbox] = adjust_div_bbox(bbox)
     adjt_bbox = long_symbol_to_sqare_bbox(bbox, 1);
 end
 
 function [adjt_bbox] = adjust_minus_bbox(bbox)
+    adjt_bbox = long_symbol_to_sqare_bbox(bbox, 1);
+end
+
+function [adjt_bbox] = adjust_short_bbox(bbox)
     adjt_bbox = long_symbol_to_sqare_bbox(bbox, 1);
 end
 
