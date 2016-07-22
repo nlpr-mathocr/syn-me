@@ -236,8 +236,8 @@ parfor i = 1 : im_num
             %         figure
             %         surf(labelmap);
             %% output bbox info
-            figure
-            imagesc(labelmap)
+%            figure
+%            imagesc(labelmap)
             unique_color = unique(labelmap(:));
             unique_color = unique_color(unique_color > 0);
             
