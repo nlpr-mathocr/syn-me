@@ -38,6 +38,7 @@ for i = 1 : im_num
         pixel = pixel - 1;
         sx = (pixel / bbox_w + pixel / bbox_h) / 2;
         regular_im = imresize(im, sx);
+        [~,gwidth,~]=size(regular_im);
         bbox_config(:, 2 : 7) = bbox_config(:, 2 : 7) * sx;
     end
 %     distort_bboxes = [];
