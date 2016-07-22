@@ -298,8 +298,8 @@ parfor i = 1 : im_num
             end
             
         end
-        
+        fclose(fp);
     end
-    fclose(fp);
+    
 end
 
