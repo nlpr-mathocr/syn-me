@@ -18,6 +18,10 @@ template2 = [1, 1,1; 1 1 1;1 1 1];
 global_scale = 0.3333;
 
 parfor i = 1 : im_num
+    filename=['color-tex-regular/', num2str(i), '.png'];
+    if ~exist(filename, 'file')
+        continue;
+    end
     im = imread(strcat('color-tex-regular/', num2str(i), '.png'));
 %     im = imdilate(im, template1);
     
