@@ -20,6 +20,10 @@ target_w = 512;
 
 
 parfor i = 1 : im_num
+    filename=[color_origin, num2str(i), '.jpg'];
+    if ~exist(filename, 'file')
+        continue;
+    end
     im = imread([color_regular, num2str(i), '.png']);
     imname =[num2str(i),'.jpg'];
 %     im = imdilate(im, template1);
