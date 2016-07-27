@@ -20,7 +20,7 @@ template2 = [1, 1,1; 1 1 1;1 1 1];
 
 
 parfor i = 1 : im_num
-    filename=[color_origin, 'bbox_', num2str(i), '.config'];
+    filename = [color_origin, 'bbox_', num2str(i), '.config'];
     if ~exist(filename, 'file')
         continue;
     end
