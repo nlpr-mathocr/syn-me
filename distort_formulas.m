@@ -20,7 +20,7 @@ target_w = 512;
 
 
 parfor i = 1 : im_num
-    filename=[color_origin, num2str(i), '.jpg'];
+    filename = [color_adjust, 'bbox_', num2str(i), '.config'];
     if ~exist(filename, 'file')
         continue;
     end
