@@ -20,7 +20,7 @@ Tform_stn = maketform('projective', src_pts, dst_pts);
 Tform_img = maketform('projective', src_img_pts, dst_img_pts);
 T = Tform_stn.tdata.T;
 
- T = T';
+% T = T';
 [src_gridx, src_gridy] = meshgrid(1 : imw, 1 : imh);
 src_gridx = src_gridx(:) / imw * 2 - 1;
 src_gridy = src_gridy(:) / imh * 2 - 1;
