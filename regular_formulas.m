@@ -1,35 +1,35 @@
-clear; close all; clc
-if ~isdir('gray-tex-images/')
-    mkdir('gray-tex-images')
+function regular_formulas(data_num,im_num)
+color_regular=[data_num,'color-tex-regular/'];
+color_gray=[data_num,'gray-tex-images/'];
+color_distort=[data_num,'distort-adjust-bbox-config/'];
+color_adjust=[data_num,'adjust-bbox-config/'];
+if ~isdir(color_gray)
+    mkdir(color_gray)
 end
 
-if ~isdir('distort-adjust-bbox-config/')
-    mkdir('distort-adjust-bbox-config');
+if ~isdir(color_distort)
+    mkdir(color_distort);
 end
 
-im_num = length(dir('color-tex-regular/*.png'));
 
 target_h = 512;
 target_w = 512;
 
 template2 = [1, 1,1; 1 1 1;1 1 1];
-
-
 global_scale = 0.3333;
 
 parfor i = 1 : im_num
-    filename=['color-tex-regular/', num2str(i), '.png'];
+    filename = [color-adjust, 'bbox_', num2str(i), '.config'];
     if ~exist(filename, 'file')
         continue;
     end
-    im = imread(strcat('color-tex-regular/', num2str(i), '.png'));
+    im = imread([color_regular, num2str(i), '.png']);
 %     im = imdilate(im, template1);
     
-    [ori_h, ori_w, ~] = size(im);
     target_im = zeros(target_h, target_w, 3);
     bbox_h=[];
     bbox_w=[];
-    bbox_config = load(strcat('adjust-bbox-config/bbox_', num2str(i), '.config'));
+    bbox_config = load([color_adjust,'bbox_', num2str(i), '.config']);
     [row col]=size(bbox_config);
     for j=1:row
         bbox_h=[bbox_h,bbox_config(j,4)-bbox_config(j,2)];
@@ -72,7 +72,7 @@ parfor i = 1 : im_num
            end
        end
        result_im=uint8(result_im);
-       imwrite(result_im, strcat('gray-tex-images/', num2str(i), '.jpg'), 'jpg');  
+       imwrite(result_im, [color_gray, num2str(i), '.jpg'], 'jpg');  
     else
         half_h = floor(target_h / 2);
         half_w = floor(target_w / 2);
@@ -88,7 +88,7 @@ parfor i = 1 : im_num
         im = im + double(im == 0) .* double(bk);
         im = imfilter(im, gausFilter, 'replicate');
 		im = uint8(im);
-		imwrite(im, strcat('gray-tex-images/', num2str(i), '.jpg'), 'jpg');      
+		imwrite(im, [color_gray, num2str(i), '.jpg'], 'jpg');      
     end
      distort_config=[];
      for j=1:row
@@ -111,5 +111,6 @@ parfor i = 1 : im_num
          distort_config=[distort_config;bbox_config(j,1),target_point(1,2),target_point(1,1),target_point(3,2),target_point(3,1),target_point(4,2),target_point(4,1),target_point(2,2),target_point(2,1),new_point(1),new_point(2)] ;
        end
     end          
-     dlmwrite(strcat('distort-adjust-bbox-config/bbox_', num2str(i), '.config') ,distort_config, 'delimiter', '\t');
- end
+     dlmwrite([color_distort,'/bbox_', num2str(i), '.config'] ,distort_config, 'delimiter', '\t');
+end
+end
