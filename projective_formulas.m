@@ -16,6 +16,10 @@ target_w = 512;
 
 
 for i = 1 : im_num
+    filename = [color_origin, num2str(i), '.jpg'];
+    if ~exist(filename, 'file')
+        continue;
+    end
     im = imread([color_regular, num2str(i), '.png']);
     imname = [num2str(i), '.jpg'];
     target_im = zeros(target_h, target_w, 3);
