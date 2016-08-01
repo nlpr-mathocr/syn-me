@@ -1,18 +1,18 @@
 function [adj_bboxes] = adjust_bb_basedon_label(label, bbox) % top left bottom right
    
-    label_num_1 = 1;
-    label_dot   = 83;
-    label_colon = 84;
-    label_cdots = 85; 
-    label_frac = 97;
-    label_minus = 64;
-    label_div   = 67;
-    label_cdot = 179;
-    label_line = 177;
-    label_comma = 148;
-    label_mid = 156;
-    label_shortminus = 174;
-    label_sim = 155;
+    label_num_1 = 1; % 1
+    label_dot   = 83; % .
+    label_colon = 84; % :
+    label_cdots = 85; % ...
+    label_frac = 97; % ---
+    label_minus = 64; % -
+    label_div   = 67; % div
+    label_cdot = 179; % ·
+    label_line = 177; % overline
+    label_comma = 148; % ,
+    label_mid = 156; % |
+    label_shortminus = 174; % \text{-}
+    label_sim = 155; % overtide
     
     if label == label_num_1
         adj_bboxes = adjust_num_1_bbox(bbox);
