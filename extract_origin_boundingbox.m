@@ -25,7 +25,7 @@ parfor i = 1 : im_num
         end
         labelmap = bwlabel(labelmap);
         
-        % process for i j = ~= >= <= % : ÷ ...
+        % process for i j = ~= >= <= % :
         if label == 19 || label == 20 || label == 67 || label == 68 || ...
                 (label >= 71 && label <= 74) || label == 82 || label == 84 || ...
                 label == 85 || label == 92 || label == 140 || (label >=151&& label <= 153) || ...
@@ -59,7 +59,6 @@ parfor i = 1 : im_num
                 break
             end
             if label == 67 % div
-                % 找到中间的横线                
                 centerlines = {};
                 points = {};
                 for j = 1 : size(bbox, 1)
@@ -78,25 +77,26 @@ parfor i = 1 : im_num
                 end
                 
                 used_points = zeros(1, size(points, 1));
-                %                 div_pairs = {};
+                %  div_pairs = {};
                 for j = 1 : size(centerlines, 1)
                     center_box = centerlines{j, :};
                     centerx = (center_box(2) + center_box(4)) / 2;
                     centery = (center_box(1) + center_box(3)) / 2;
-                    tmp_pair = [j, 1, 1]; % 中心线，上点，下炿                    min_down_dis = 100000;
+                    tmp_pair = [j, 1, 1];
+                    min_down_dis = 100000;
                     min_up_dis = 100000;
-                    for k = 1 : size(points, 1) % 横线上下分别找个朿的点
+                    for k = 1 : size(points, 1) %
                         if used_points(k)
                             continue
                         end
                         point_bbox = points{k, :};
-                        if (point_bbox(1) + point_bbox(3)) / 2 < centery % 位于上面的点
+                        if (point_bbox(1) + point_bbox(3)) / 2 < centery
                             tmpdis = abs((point_bbox(1) + point_bbox(3)) / 2 - centery) + abs((point_bbox(2) + point_bbox(4)) / 2 - centerx);
                             if tmpdis < min_up_dis
                                 min_up_dis = tmpdis;
                                 tmp_pair(2) = k;
                             end
-                        else % 位于下面的点
+                        else
                             tmpdis = abs((point_bbox(1) + point_bbox(3)) / 2 - centery) + abs((point_bbox(2) + point_bbox(4)) / 2 - centerx);
                             if tmpdis < min_down_dis
                                 min_down_dis = tmpdis;
@@ -107,7 +107,7 @@ parfor i = 1 : im_num
                     if tmp_pair(2) ~= tmp_pair(3)
                         used_points(tmp_pair(2)) = 1;
                         used_points(tmp_pair(3)) = 1;
-                        %                         div_pairs = [div_pairs; tmp_pair];
+                        %  div_pairs = [div_pairs; tmp_pair];
                         
                         bbox1 = centerlines{tmp_pair(1), :};
                         bbox2 = points{tmp_pair(2), :};
@@ -115,10 +115,10 @@ parfor i = 1 : im_num
                         
                         tmpbbox = [ min([bbox1(1), bbox2(1), bbox3(1)]), min([bbox1(2), bbox2(2), bbox3(2)]), ...
                             max([bbox1(3), bbox2(3), bbox3(3)]), max([bbox1(4), bbox2(4), bbox3(4)]) ];
-                        %                         im(tmpbbox(1), tmpbbox(2) : tmpbbox(4), :) = 0;
-                        %                         im(tmpbbox(3), tmpbbox(2) : tmpbbox(4), :) = 0;
-                        %                         im(tmpbbox(1) : tmpbbox(3), tmpbbox(2), :) = 0;
-                        %                         im(tmpbbox(1) : tmpbbox(3), tmpbbox(4), :) = 0;
+                        % im(tmpbbox(1), tmpbbox(2) : tmpbbox(4), :) = 0;
+                        % im(tmpbbox(3), tmpbbox(2) : tmpbbox(4), :) = 0;
+                        % im(tmpbbox(1) : tmpbbox(3), tmpbbox(2), :) = 0;
+                        % im(tmpbbox(1) : tmpbbox(3), tmpbbox(4), :) = 0;
                         fprintf(fp, '%d %d %d %d %d %g %g\n', label, tmpbbox(1), tmpbbox(2), tmpbbox(3), tmpbbox(4),roundn((tmpbbox(2)+tmpbbox(4))/2,-1),roundn((tmpbbox(1)+tmpbbox(3))/2,-1));  % top left bottom right
                     end
                 end
@@ -143,7 +143,6 @@ parfor i = 1 : im_num
                     end
                     near_pair = [near_pair; tmp_pair];
                 end
-                % 找到中心炿                
                 index_count = zeros(1, size(near_pair, 1));
                 for j = 1 : size(near_pair, 1)
                     index_count(near_pair(j, 2)) = index_count(near_pair(j, 2)) + 1;
@@ -154,20 +153,20 @@ parfor i = 1 : im_num
                         center_index = [center_index, j];
                     end
                 end
-                %                 cdots_pair = {};
+                % cdots_pair = {};
                 for j = 1 : length(center_index)
                     tmp = (near_pair(:, 2) == center_index(j))' .* (1 : size(near_pair, 1));
                     tmp = tmp(tmp > 0);
-                    %                     cdots_pair = [cdots_pair; center_index(j), tmp];
+                    % cdots_pair = [cdots_pair; center_index(j), tmp];
                     % draw bbox
                     bbox1 = bbox{tmp(1), :};
                     bbox2 = bbox{tmp(2), :};
                     tmpbbox = [ min(bbox1(1), bbox2(1)), min(bbox1(2), bbox2(2)), ...
                         max(bbox1(3), bbox2(3)), max(bbox1(4), bbox2(4)) ];
-                    %                     im(tmpbbox(1), tmpbbox(2) : tmpbbox(4), :) = 0;
-                    %                     im(tmpbbox(3), tmpbbox(2) : tmpbbox(4), :) = 0;
-                    %                     im(tmpbbox(1) : tmpbbox(3), tmpbbox(2), :) = 0;
-                    %                     im(tmpbbox(1) : tmpbbox(3), tmpbbox(4), :) = 0;
+                    % im(tmpbbox(1), tmpbbox(2) : tmpbbox(4), :) = 0;
+                    % im(tmpbbox(3), tmpbbox(2) : tmpbbox(4), :) = 0;
+                    % im(tmpbbox(1) : tmpbbox(3), tmpbbox(2), :) = 0;
+                    % im(tmpbbox(1) : tmpbbox(3), tmpbbox(4), :) = 0;
                     fprintf(fp, '%d %d %d %d %d %g %g\n', label, tmpbbox(1), tmpbbox(2), tmpbbox(3), tmpbbox(4),roundn((tmpbbox(2)+tmpbbox(4))/2,-1),roundn((tmpbbox(1)+tmpbbox(3))/2,-1));  % top left bottom right
                 end
             else
@@ -175,7 +174,7 @@ parfor i = 1 : im_num
                 if label == 19 || label == 20 || label == 151|| label == 152|| label == 153% i j ; ! ?
                     usedcenter = topcenter;
                 end
-                %                 bbox_pair = {};
+                % bbox_pair = {};
                 bbox_used = zeros(1, size(usedcenter, 1));
                 for j = 1 : size(usedcenter, 1)
                     if bbox_used(j)
@@ -196,7 +195,7 @@ parfor i = 1 : im_num
                     end
                     if tmppair(2) ~= tmppair(1)
                         bbox_used(tmppair(2)) = 1;
-                        %                         bbox_pair = [bbox_pair; tmppair];
+                        % bbox_pair = [bbox_pair; tmppair];
                     end
                     % draw bbox
                     bbox1 = bbox{tmppair(1), :};
@@ -204,10 +203,10 @@ parfor i = 1 : im_num
                     tmpbbox = [ min(bbox1(1), bbox2(1)), min(bbox1(2), bbox2(2)), ...
                         max(bbox1(3), bbox2(3)), max(bbox1(4), bbox2(4)) ];
                     %
-                    %                         im(tmpbbox(1), tmpbbox(2) : tmpbbox(4), :) = 0;
-                    %                         im(tmpbbox(3), tmpbbox(2) : tmpbbox(4), :) = 0;
-                    %                         im(tmpbbox(1) : tmpbbox(3), tmpbbox(2), :) = 0;
-                    %                         im(tmpbbox(1) : tmpbbox(3), tmpbbox(4), :) = 0;
+                    % im(tmpbbox(1), tmpbbox(2) : tmpbbox(4), :) = 0;
+                    % im(tmpbbox(3), tmpbbox(2) : tmpbbox(4), :) = 0;
+                    % im(tmpbbox(1) : tmpbbox(3), tmpbbox(2), :) = 0;
+                    % im(tmpbbox(1) : tmpbbox(3), tmpbbox(4), :) = 0;
                     fprintf(fp, '%d %d %d %d %d %g %g\n', label, tmpbbox(1), tmpbbox(2), tmpbbox(3), tmpbbox(4),roundn((tmpbbox(2)+tmpbbox(4))/2,-1),roundn((tmpbbox(1)+tmpbbox(3))/2,-1)); % top left bottom right
                     
                 end
@@ -242,62 +241,62 @@ parfor i = 1 : im_num
                 
                 tmp_used = zeros(1, length(unique_color));
                 
-                for color_id = 1 : length(unique_color) % 遍历每一个连通部仿                if tmp_used(color_id) > 0
-                    continue;
-                end
-                tmpmap = double(labelmap == unique_color(color_id));
-                xmap = double(sum(tmpmap) > 0) .* (1 : size(tmpmap, 2));
-                xmap = xmap(xmap > 0);
-                ymap = double(sum(tmpmap, 2) > 0)' .* (1 : size(tmpmap, 1));
-                ymap = ymap(ymap > 0);
-                
-                if xmap(end) - xmap(1) < 5 && ymap(end) - ymap(1) < 5
-                    disp([color_regular, num2str(i), '.png', ',single-part label: ', num2str(label)])
-                end
-                if label == 98 %#ok<ALIGN> % sqrt
-                    % the ymap should be jump down to a low value
-                    fprintf(fp, '%d %d %d %d %d ', label, ymap(1), xmap(1), ymap(end), xmap(end));
-                    yproj = sum(tmpmap, 2);
-                    ygap = abs(yproj(1 : end - 1) - yproj(2 : end));
-                    [maxv, maxp] = max(ygap);
-                    while sum(tmpmap(maxp,:))==0
-                        maxp=maxp+1;
+                for color_id = 1 : length(unique_color)
+                    if tmp_used(color_id) > 0
+                        continue;
                     end
-                    xlabel = tmpmap(maxp, :);
-                    xlabel = (xlabel > 0) .* (1 : size(tmpmap, 2));
-                    xlabel = xlabel(xlabel > 0);
-                    xmap = xmap(1) : min(xlabel);
-                    im(ymap(1) : ymap(end), xmap(1) : xmap(end), :) = 255;
-                    fprintf(fp,'%g %g\n',roundn((xmap(1)+xmap(end))/2,-1),roundn((ymap(1)+ymap(end))/2,-1));
-                    continue;
-                end
-                if label ==169
-                    xproj=sum(tmpmap,1);
-                    if xproj(xmap(1))>xproj(xmap(end))
-                        label=170;
+                    tmpmap = double(labelmap == unique_color(color_id));
+                    xmap = double(sum(tmpmap) > 0) .* (1 : size(tmpmap, 2));
+                    xmap = xmap(xmap > 0);
+                    ymap = double(sum(tmpmap, 2) > 0)' .* (1 : size(tmpmap, 1));
+                    ymap = ymap(ymap > 0);
+                    
+                    if xmap(end) - xmap(1) < 5 && ymap(end) - ymap(1) < 5
+                        disp([color_regular, num2str(i), '.png', ',single-part label: ', num2str(label)])
                     end
-                end
-                if label ==95
-                    xproj=sum(tmpmap,1);
-                    if xproj(xmap(1))<xproj(xmap(end))
-                        label=96;
+                    if label == 98 % sqrt
+                        % the ymap should be jump down to a low value
+                        fprintf(fp, '%d %d %d %d %d ', label, ymap(1), xmap(1), ymap(end), xmap(end));
+                        yproj = sum(tmpmap, 2);
+                        ygap = abs(yproj(1 : end - 1) - yproj(2 : end));
+                        [~, maxp] = max(ygap);
+                        while sum(tmpmap(maxp,:))==0
+                            maxp=maxp+1;
+                        end
+                        xlabel = tmpmap(maxp, :);
+                        xlabel = (xlabel > 0) .* (1 : size(tmpmap, 2));
+                        xlabel = xlabel(xlabel > 0);
+                        xmap = xmap(1) : min(xlabel);
+                        im(ymap(1) : ymap(end), xmap(1) : xmap(end), :) = 255;
+                        fprintf(fp,'%g %g\n',roundn((xmap(1)+xmap(end))/2,-1),roundn((ymap(1)+ymap(end))/2,-1));
+                        continue;
                     end
-                end
-                if label ==96
-                    xproj=sum(tmpmap,1);
-                    if xproj(xmap(1))>xproj(xmap(end))
-                        label=95;
+                    if label ==169
+                        xproj=sum(tmpmap,1);
+                        if xproj(xmap(1))>xproj(xmap(end))
+                            label=170;
+                        end
                     end
+                    if label ==95
+                        xproj=sum(tmpmap,1);
+                        if xproj(xmap(1))<xproj(xmap(end))
+                            label=96;
+                        end
+                    end
+                    if label ==96
+                        xproj=sum(tmpmap,1);
+                        if xproj(xmap(1))>xproj(xmap(end))
+                            label=95;
+                        end
+                    end
+                    
+                    % output bbox
+                    fprintf(fp, '%d %d %d %d %d %g %g\n', label, ymap(1), xmap(1), ymap(end), xmap(end),roundn((xmap(1)+xmap(end))/2,-1),roundn((ymap(1)+ymap(end))/2,-1)); % top left bottom right
                 end
-                
-                % output bbox
-                fprintf(fp, '%d %d %d %d %d %g %g\n', label, ymap(1), xmap(1), ymap(end), xmap(end),roundn((xmap(1)+xmap(end))/2,-1),roundn((ymap(1)+ymap(end))/2,-1)); % top left bottom right
             end
+            
         end
-        
     end
     fclose(fp);
-end
-
 end
 
