@@ -1,7 +1,7 @@
- function extract_origin_boundingbox(data_num,im_num)
-color_regular=[data_num,'color-tex-regular/'];
-color_config=[data_num,'tex_config/'];
-color_bbox=[data_num,'bbox-config/'];
+function extract_origin_boundingbox(data_num, im_num)
+color_regular = [data_num, 'color-tex-regular/'];
+color_config = [data_num, 'tex_config/'];
+color_bbox = [data_num, 'bbox-config/'];
 if ~isdir(color_bbox)
     mkdir(color_bbox);
 end
@@ -29,7 +29,7 @@ parfor i = 1 : im_num
         if label == 19 || label == 20 || label == 67 || label == 68 || ...
                 (label >= 71 && label <= 74) || label == 82 || label == 84 || ...
                 label == 85 || label == 92 || label == 140 || (label >=151&& label <= 153) || ...
-                label == 157 || label == 127 || label == 128|| label == 184|| label == 188|| label == 191|| label == 196				
+                label == 157 || label == 127 || label == 128|| label == 184|| label == 188|| label == 191|| label == 196
             bbox = {};
             topcenter = {};
             bottomcenter = {};
@@ -59,8 +59,7 @@ parfor i = 1 : im_num
                 break
             end
             if label == 67 % div
-                % 找到中间的横线
-                centerlines = {};
+                % 找到中间的横线                centerlines = {};
                 points = {};
                 for j = 1 : size(bbox, 1)
                     tmpbbox = bbox{j, :};
@@ -83,10 +82,9 @@ parfor i = 1 : im_num
                     center_box = centerlines{j, :};
                     centerx = (center_box(2) + center_box(4)) / 2;
                     centery = (center_box(1) + center_box(3)) / 2;
-                    tmp_pair = [j, 1, 1]; % 中心线，上点，下炿
-                    min_down_dis = 100000;
+                    tmp_pair = [j, 1, 1]; % 中心线，上点，下炿                    min_down_dis = 100000;
                     min_up_dis = 100000;
-                    for k = 1 : size(points, 1) % 横线上下分别找个朿?的点
+                    for k = 1 : size(points, 1) % 横线上下分别找个朿的点
                         if used_points(k)
                             continue
                         end
@@ -144,8 +142,7 @@ parfor i = 1 : im_num
                     end
                     near_pair = [near_pair; tmp_pair];
                 end
-                % 找到中心炿
-                index_count = zeros(1, size(near_pair, 1));
+                % 找到中心炿                index_count = zeros(1, size(near_pair, 1));
                 for j = 1 : size(near_pair, 1)
                     index_count(near_pair(j, 2)) = index_count(near_pair(j, 2)) + 1;
                 end
@@ -215,36 +212,35 @@ parfor i = 1 : im_num
             end
         else
             if label == 162 || label == 164 || label == 176 || label ==178
-               bbox = {};
-               cc_color = unique(labelmap(:));
-               for k = 2 : length(cc_color)
-                   tmp_cc = double(labelmap == cc_color(k));
-                   xlabel = sum(tmp_cc) > 0;
-                   xlabel = double(xlabel) .* (1:length(xlabel));
-                   xlabel = xlabel(xlabel > 0); % left right
-                   ylabel = sum(tmp_cc, 2) > 0;
-                   ylabel = double(ylabel') .* (1:length(ylabel));
-                   ylabel = ylabel(ylabel > 0); % top bottom
-                   bbox = [bbox; ylabel(1), xlabel(1), ylabel(end), xlabel(end)];
-               end
-               bbox1=bbox{1};
-               bbox3=bbox{3};
+                bbox = {};
+                cc_color = unique(labelmap(:));
+                for k = 2 : length(cc_color)
+                    tmp_cc = double(labelmap == cc_color(k));
+                    xlabel = sum(tmp_cc) > 0;
+                    xlabel = double(xlabel) .* (1:length(xlabel));
+                    xlabel = xlabel(xlabel > 0); % left right
+                    ylabel = sum(tmp_cc, 2) > 0;
+                    ylabel = double(ylabel') .* (1:length(ylabel));
+                    ylabel = ylabel(ylabel > 0); % top bottom
+                    bbox = [bbox; ylabel(1), xlabel(1), ylabel(end), xlabel(end)];
+                end
+                bbox1=bbox{1};
+                bbox3=bbox{3};
                 fprintf(fp, '%d %d %d %d %d %g %g\n', label, bbox1(1), bbox1(2), bbox3(3), bbox3(4),roundn((bbox1(2)+bbox3(4))/2,-1),roundn((bbox1(1)+bbox3(3))/2,-1));
             else
-            %% new code
-            % show map as a test
-            %         figure
-            %         surf(labelmap);
-            %% output bbox info
-%            figure
-%            imagesc(labelmap)
-            unique_color = unique(labelmap(:));
-            unique_color = unique_color(unique_color > 0);
-            
-            tmp_used = zeros(1, length(unique_color));
-            
-            for color_id = 1 : length(unique_color) % 遍历每一个连通部仿
-                if tmp_used(color_id) > 0
+                %% new code
+                % show map as a test
+                %         figure
+                %         surf(labelmap);
+                %% output bbox info
+                %            figure
+                %            imagesc(labelmap)
+                unique_color = unique(labelmap(:));
+                unique_color = unique_color(unique_color > 0);
+                
+                tmp_used = zeros(1, length(unique_color));
+                
+                for color_id = 1 : length(unique_color) % 遍历每一个连通部仿                if tmp_used(color_id) > 0
                     continue;
                 end
                 tmpmap = double(labelmap == unique_color(color_id));
@@ -256,9 +252,9 @@ parfor i = 1 : im_num
                 if xmap(end) - xmap(1) < 5 && ymap(end) - ymap(1) < 5
                     disp([color_regular, num2str(i), '.png', ',single-part label: ', num2str(label)])
                 end
-		if label == 98 %#ok<ALIGN> % sqrt
-			% the ymap should be jump down to a low value
-                    fprintf(fp, '%d %d %d %d %d ', label, ymap(1), xmap(1), ymap(end), xmap(end)); 
+                if label == 98 %#ok<ALIGN> % sqrt
+                    % the ymap should be jump down to a low value
+                    fprintf(fp, '%d %d %d %d %d ', label, ymap(1), xmap(1), ymap(end), xmap(end));
                     yproj = sum(tmpmap, 2);
                     ygap = abs(yproj(1 : end - 1) - yproj(2 : end));
                     [maxv, maxp] = max(ygap);
@@ -274,32 +270,32 @@ parfor i = 1 : im_num
                     continue;
                 end
                 if label ==169
-                    xproj=sum(tmpmap,1);                 
+                    xproj=sum(tmpmap,1);
                     if xproj(xmap(1))>xproj(xmap(end))
                         label=170;
                     end
                 end
                 if label ==95
-                    xproj=sum(tmpmap,1);                 
+                    xproj=sum(tmpmap,1);
                     if xproj(xmap(1))<xproj(xmap(end))
                         label=96;
                     end
                 end
                 if label ==96
-                    xproj=sum(tmpmap,1);                 
+                    xproj=sum(tmpmap,1);
                     if xproj(xmap(1))>xproj(xmap(end))
                         label=95;
                     end
                 end
                 
                 % output bbox
-                     fprintf(fp, '%d %d %d %d %d %g %g\n', label, ymap(1), xmap(1), ymap(end), xmap(end),roundn((xmap(1)+xmap(end))/2,-1),roundn((ymap(1)+ymap(end))/2,-1)); % top left bottom right             
+                fprintf(fp, '%d %d %d %d %d %g %g\n', label, ymap(1), xmap(1), ymap(end), xmap(end),roundn((xmap(1)+xmap(end))/2,-1),roundn((ymap(1)+ymap(end))/2,-1)); % top left bottom right
             end
-            end
-            
         end
-        fclose(fp);
+        
     end
-    
+    fclose(fp);
+end
+
 end
 
