@@ -59,7 +59,8 @@ parfor i = 1 : im_num
                 break
             end
             if label == 67 % div
-                % 找到中间的横线                centerlines = {};
+                % 找到中间的横线                
+                centerlines = {};
                 points = {};
                 for j = 1 : size(bbox, 1)
                     tmpbbox = bbox{j, :};
@@ -142,7 +143,8 @@ parfor i = 1 : im_num
                     end
                     near_pair = [near_pair; tmp_pair];
                 end
-                % 找到中心炿                index_count = zeros(1, size(near_pair, 1));
+                % 找到中心炿                
+                index_count = zeros(1, size(near_pair, 1));
                 for j = 1 : size(near_pair, 1)
                     index_count(near_pair(j, 2)) = index_count(near_pair(j, 2)) + 1;
                 end
