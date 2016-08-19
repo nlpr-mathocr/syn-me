@@ -15,7 +15,7 @@ target_h = 512;
 stand_w = 32;
 stand_h = 32;
 
-for imid = 1 : im_num
+parfor imid = 1 : im_num
     cfgname = [color_adjust, 'bbox_', num2str(imid), '.config'];
     if ~exist(cfgname, 'file')
         continue;
