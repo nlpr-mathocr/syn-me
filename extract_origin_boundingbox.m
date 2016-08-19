@@ -119,7 +119,8 @@ parfor i = 1 : im_num
                         % im(tmpbbox(3), tmpbbox(2) : tmpbbox(4), :) = 0;
                         % im(tmpbbox(1) : tmpbbox(3), tmpbbox(2), :) = 0;
                         % im(tmpbbox(1) : tmpbbox(3), tmpbbox(4), :) = 0;
-                        fprintf(fp, '%d %d %d %d %d %g %g\n', label, tmpbbox(1), tmpbbox(2), tmpbbox(3), tmpbbox(4),roundn((tmpbbox(2)+tmpbbox(4))/2,-1),roundn((tmpbbox(1)+tmpbbox(3))/2,-1));  % top left bottom right
+                        fprintf(fp, '%d %d %d %d %d %g %g\n', label, tmpbbox(1), tmpbbox(2), tmpbbox(3), tmpbbox(4), ...
+                            roundn((tmpbbox(1) + tmpbbox(3)) / 2, -1), roundn((tmpbbox(2) + tmpbbox(4)) / 2, -1));  % top left bottom right
                     end
                 end
             elseif label == 85 % ...
@@ -167,7 +168,8 @@ parfor i = 1 : im_num
                     % im(tmpbbox(3), tmpbbox(2) : tmpbbox(4), :) = 0;
                     % im(tmpbbox(1) : tmpbbox(3), tmpbbox(2), :) = 0;
                     % im(tmpbbox(1) : tmpbbox(3), tmpbbox(4), :) = 0;
-                    fprintf(fp, '%d %d %d %d %d %g %g\n', label, tmpbbox(1), tmpbbox(2), tmpbbox(3), tmpbbox(4),roundn((tmpbbox(2)+tmpbbox(4))/2,-1),roundn((tmpbbox(1)+tmpbbox(3))/2,-1));  % top left bottom right
+                    fprintf(fp, '%d %d %d %d %d %g %g\n', label, tmpbbox(1), tmpbbox(2), tmpbbox(3), tmpbbox(4), ...
+                        roundn((tmpbbox(1) + tmpbbox(3)) / 2, -1), roundn((tmpbbox(2) + tmpbbox(4)) / 2, -1));  % top left bottom right
                 end
             else
                 usedcenter = bottomcenter;
@@ -207,7 +209,8 @@ parfor i = 1 : im_num
                     % im(tmpbbox(3), tmpbbox(2) : tmpbbox(4), :) = 0;
                     % im(tmpbbox(1) : tmpbbox(3), tmpbbox(2), :) = 0;
                     % im(tmpbbox(1) : tmpbbox(3), tmpbbox(4), :) = 0;
-                    fprintf(fp, '%d %d %d %d %d %g %g\n', label, tmpbbox(1), tmpbbox(2), tmpbbox(3), tmpbbox(4),roundn((tmpbbox(2)+tmpbbox(4))/2,-1),roundn((tmpbbox(1)+tmpbbox(3))/2,-1)); % top left bottom right
+                    fprintf(fp, '%d %d %d %d %d %g %g\n', label, tmpbbox(1), tmpbbox(2), tmpbbox(3), tmpbbox(4), ...
+                        roundn((tmpbbox(1) + tmpbbox(3)) / 2, -1), roundn((tmpbbox(2) + tmpbbox(4)) / 2, -1)); % top left bottom right
                     
                 end
             end
@@ -225,9 +228,10 @@ parfor i = 1 : im_num
                     ylabel = ylabel(ylabel > 0); % top bottom
                     bbox = [bbox; ylabel(1), xlabel(1), ylabel(end), xlabel(end)];
                 end
-                bbox1=bbox{1};
-                bbox3=bbox{3};
-                fprintf(fp, '%d %d %d %d %d %g %g\n', label, bbox1(1), bbox1(2), bbox3(3), bbox3(4),roundn((bbox1(2)+bbox3(4))/2,-1),roundn((bbox1(1)+bbox3(3))/2,-1));
+                bbox1 = bbox{1};
+                bbox3 = bbox{3};
+                fprintf(fp, '%d %d %d %d %d %g %g\n', label, bbox1(1), bbox1(2), bbox3(3), bbox3(4), ...
+                    roundn((bbox1(1) + bbox3(3)) / 2, -1), roundn((bbox1(2) + bbox3(4)) / 2, -1));
             else
                 %% new code
                 % show map as a test
@@ -268,7 +272,7 @@ parfor i = 1 : im_num
                         xlabel = xlabel(xlabel > 0);
                         xmap = xmap(1) : min(xlabel);
                         im(ymap(1) : ymap(end), xmap(1) : xmap(end), :) = 255;
-                        fprintf(fp,'%g %g\n',roundn((xmap(1)+xmap(end))/2,-1),roundn((ymap(1)+ymap(end))/2,-1));
+                        fprintf(fp,'%g %g\n', roundn((ymap(1) + ymap(end)) / 2, -1), roundn((xmap(1) + xmap(end)) / 2,- 1));
                         continue;
                     end
                     if label ==169
@@ -291,7 +295,8 @@ parfor i = 1 : im_num
                     end
                     
                     % output bbox
-                    fprintf(fp, '%d %d %d %d %d %g %g\n', label, ymap(1), xmap(1), ymap(end), xmap(end),roundn((xmap(1)+xmap(end))/2,-1),roundn((ymap(1)+ymap(end))/2,-1)); % top left bottom right
+                    fprintf(fp, '%d %d %d %d %d %g %g\n', label, ymap(1), xmap(1), ymap(end), xmap(end), ...
+                        roundn((ymap(1) + ymap(end)) / 2, -1), roundn((xmap(1) + xmap(end)) / 2, -1)); % top left bottom right
                 end
             end
             
