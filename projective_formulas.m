@@ -37,8 +37,8 @@ parfor imid = 1 : im_num
     end
     bbox_h = median(bbox_hs);
     bbox_w = median(bbox_ws);
-    base_scl = sqrt((stand_w * stand_w + stand_h * stand_h) ...
-        / (bbox_w * bbox_w + bbox_h * bbox_h));
+    base_scl = min(sqrt((stand_w * stand_w + stand_h * stand_h) ...
+        / (bbox_w * bbox_w + bbox_h * bbox_h)), 0.75 * target_w / size(im, 2));
     im = imresize(im, base_scl, 'nearest');
     if max(size(im)) > min(target_h, target_w)
         disp(['Invalid Image Size : ', imname]);
