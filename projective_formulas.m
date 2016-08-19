@@ -24,10 +24,10 @@ for imid = 1 : im_num
     im = imread([color_regular, num2str(imid), '.png']);
     
     bboxes = load(cfgname);
-%     % swap centerx centery
-%     tmp = bboxes(:, 6);
-%     bboxes(:, 6) = bboxes(:, 7);
-%     bboxes(:, 7) = tmp;
+    %     % swap centerx centery
+    %     tmp = bboxes(:, 6);
+    %     bboxes(:, 6) = bboxes(:, 7);
+    %     bboxes(:, 7) = tmp;
     
     bbox_hs = zeros(1, size(bboxes, 1));
     bbox_ws = zeros(1, size(bboxes, 1));
@@ -59,10 +59,10 @@ for imid = 1 : im_num
     
     ori_img = uint8(zeros(target_h, target_w, 3));
     ori_img(ori_top : ori_bottom, ori_left : ori_right, :) = im;
-%     ori_img(1 : 10, 1 : 10, :) = 255;
-%     ori_img(1 : 10, end - 9 : end, :) = 255;
-%     ori_img(end - 9 : end, end - 9 : end, :) = 255;
-%     ori_img(end - 9 : end, 1 : 10, :) = 255;
+    %     ori_img(1 : 10, 1 : 10, :) = 255;
+    %     ori_img(1 : 10, end - 9 : end, :) = 255;
+    %     ori_img(end - 9 : end, end - 9 : end, :) = 255;
+    %     ori_img(end - 9 : end, 1 : 10, :) = 255;
     %% transform grid
     src_pts = [-1 -1; 1 -1; 1 1; -1 1];
     src_me_pts = [ori_left, ori_top; ori_right, ori_top; ori_right, ori_bottom; ori_left, ori_bottom];
@@ -71,7 +71,7 @@ for imid = 1 : im_num
     src_me_pts = [src_me_pts, ones(4, 1)];
     
     trans_deviate = [unifrnd(1 - ori_left, target_w - ori_right) / target_w * 2, unifrnd(1 - ori_top, target_h - ori_bottom) / target_h * 2];
-%     trans_deviate = [max(1 - ori_left, target_w - ori_right) / target_w * 2, max(1 - ori_top, target_h - ori_bottom) / target_h * 2];
+    %     trans_deviate = [max(1 - ori_left, target_w - ori_right) / target_w * 2, max(1 - ori_top, target_h - ori_bottom) / target_h * 2];
     corner_deviate = 0.5 * (rand(4, 2) - 0.5) + repmat(trans_deviate, [4, 1]);
     dst_pts = src_pts + corner_deviate;
     Tform_stn = maketform('projective', src_pts, dst_pts);
@@ -100,7 +100,7 @@ for imid = 1 : im_num
     dst_img_pts = src_img_pts + round([corner_deviate(:, 1) * target_w / 2, corner_deviate(:, 2) * target_h / 2]);
     
     Tform_img = maketform('projective', src_img_pts, dst_img_pts);
-%     T2 = Tform_img.tdata.T;
+    %     T2 = Tform_img.tdata.T;
     
     % transform images and adjust the size to [target_h, target_w]
     [dst_irg_im, ~, ~] = imtransform(ori_img, Tform_img, 'nearest');
@@ -137,56 +137,56 @@ for imid = 1 : im_num
         bbox_4p(1 : 2 : end) = (bbox_4p(:, 1 : 2 : end) + 1) * target_w / 2;
         bbox_4p(2 : 2 : end) = (bbox_4p(:, 2 : 2 : end) + 1) * target_h / 2;
         bboxes_4p(bid, 2 : end) = bbox_4p;
-%         y = bbox_4p(2 : 2 : end);
-%         x = bbox_4p(1 : 2 : end);
-%         dst_im = bitmapplot(y, x, dst_im, struct('LineWidth', 1, 'Color', [0 1 0 1]));
+        %         y = bbox_4p(2 : 2 : end);
+        %         x = bbox_4p(1 : 2 : end);
+        %         dst_im = bitmapplot(y, x, dst_im, struct('LineWidth', 1, 'Color', [0 1 0 1]));
     end
-%     figure
-%     imshow(dst_im)
-%     imwrite(dst_im, ['dis', num2str(imid), '.png'], 'png');
+    %     figure
+    %     imshow(dst_im)
+    %     imwrite(dst_im, ['dis', num2str(imid), '.png'], 'png');
     %% reverse bboxes_4p to bboxes_2p --- just for test
-%     [src_gridx, src_gridy] = meshgrid(1 : target_w, 1 : target_h);
-%     src_gridx = src_gridx(:) / target_w * 2 - 1;
-%     src_gridy = src_gridy(:) / target_h * 2 - 1;
-%     src_grid = [src_gridx, src_gridy, ones(length(src_gridx), 1)];
-%     dst_grid = src_grid * T;
-%     dst_grid(:, 1) = dst_grid(:, 1) ./ dst_grid(:, 3);
-%     dst_grid(:, 2) = dst_grid(:, 2) ./ dst_grid(:, 3);
-%     dst_grid(:, 1) = round((dst_grid(:, 1) + 1) / 2 * target_w);
-%     dst_grid(:, 2) = round((dst_grid(:, 2) + 1) / 2 * target_h);
-%     in_bound = dst_grid(:, 1) >= 1 & dst_grid(:, 1) <= target_w & dst_grid(:, 2) >= 1 & dst_grid(:, 2) <= target_h;
-%     src_im = uint8(zeros(target_h, target_w, 3));
-%     [src_gridx, src_gridy] = meshgrid(1 : target_w, 1 : target_h);
-%     src_grid = [src_gridx(:), src_gridy(:), ones(length(src_gridx(:)), 1)];
-%     src_grid = src_grid(in_bound, :);
-%     dst_grid = dst_grid(in_bound, :);
-%     for c = 1 : 3
-%         src_im((c - 1) * target_w * target_h + (src_grid(:, 1) - 1) * target_h + src_grid(:, 2)) = ...
-%             dst_im((c - 1) * target_w * target_h + (dst_grid(:, 1) - 1) * target_h + dst_grid(:, 2));
-%     end
+    %     [src_gridx, src_gridy] = meshgrid(1 : target_w, 1 : target_h);
+    %     src_gridx = src_gridx(:) / target_w * 2 - 1;
+    %     src_gridy = src_gridy(:) / target_h * 2 - 1;
+    %     src_grid = [src_gridx, src_gridy, ones(length(src_gridx), 1)];
+    %     dst_grid = src_grid * T;
+    %     dst_grid(:, 1) = dst_grid(:, 1) ./ dst_grid(:, 3);
+    %     dst_grid(:, 2) = dst_grid(:, 2) ./ dst_grid(:, 3);
+    %     dst_grid(:, 1) = round((dst_grid(:, 1) + 1) / 2 * target_w);
+    %     dst_grid(:, 2) = round((dst_grid(:, 2) + 1) / 2 * target_h);
+    %     in_bound = dst_grid(:, 1) >= 1 & dst_grid(:, 1) <= target_w & dst_grid(:, 2) >= 1 & dst_grid(:, 2) <= target_h;
+    %     src_im = uint8(zeros(target_h, target_w, 3));
+    %     [src_gridx, src_gridy] = meshgrid(1 : target_w, 1 : target_h);
+    %     src_grid = [src_gridx(:), src_gridy(:), ones(length(src_gridx(:)), 1)];
+    %     src_grid = src_grid(in_bound, :);
+    %     dst_grid = dst_grid(in_bound, :);
+    %     for c = 1 : 3
+    %         src_im((c - 1) * target_w * target_h + (src_grid(:, 1) - 1) * target_h + src_grid(:, 2)) = ...
+    %             dst_im((c - 1) * target_w * target_h + (dst_grid(:, 1) - 1) * target_h + dst_grid(:, 2));
+    %     end
     
-%     for bid = 1 : size(bboxes)
-%         y = [bboxes(bid, 2), bboxes(bid, 2), bboxes(bid, 4), bboxes(bid, 4), bboxes(bid, 6)];
-%         x = [bboxes(bid, 3), bboxes(bid, 5), bboxes(bid, 5), bboxes(bid, 3), bboxes(bid, 7)];
-%         src_im = bitmapplot(y, x, src_im, struct('LineWidth', 1, 'Color', [0 1 0 1]));
-%     end
-%     figure
-%     imshow(uint8(src_im))
+    %     for bid = 1 : size(bboxes)
+    %         y = [bboxes(bid, 2), bboxes(bid, 2), bboxes(bid, 4), bboxes(bid, 4), bboxes(bid, 6)];
+    %         x = [bboxes(bid, 3), bboxes(bid, 5), bboxes(bid, 5), bboxes(bid, 3), bboxes(bid, 7)];
+    %         src_im = bitmapplot(y, x, src_im, struct('LineWidth', 1, 'Color', [0 1 0 1]));
+    %     end
+    %     figure
+    %     imshow(uint8(src_im))
     %% output T matrix and gray-scale ME image
     T = T';
     T = T(1 : 8);
     dlmwrite([color_projective, 'projective_', num2str(imid), '.config'], T, 'delimiter', ' ');
     target_im = dst_im;
     if rand(1) > 0.5
-       target_im = imdilate(target_im, template2);
-       target_im = sum(target_im, 3);
-       target_im = double(target_im == 0) .* 113 + double(target_im > 0) .* 0;
-       target_im=uint8(target_im);
-       imwrite(target_im, [color_gray, imname], 'png');  
+        target_im = imdilate(target_im, template2);
+        target_im = sum(target_im, 3);
+        target_im = double(target_im == 0) .* 113 + double(target_im > 0) .* 0;
+        target_im=uint8(target_im);
+        imwrite(target_im, [color_gray, imname], 'png');
     else
         bklib_num = length(dir('newbackground/*.jpg'));
         gray_contrast = 60;
-        sigma = 1; 
+        sigma = 1;
         gausFilter = fspecial('gaussian', [3 3], sigma);
         im_ori = uint8(target_im);
         im_ori = double(rgb2gray(im_ori));
@@ -195,8 +195,9 @@ for imid = 1 : im_num
         im = ((bk_mean - gray_contrast) * rand(1)) * double(im_ori > 0);
         im = im + double(im == 0) .* double(bk);
         im = imfilter(im, gausFilter, 'replicate');
-		im = uint8(im);
-		imwrite(im, [color_gray, imname], 'jpg');      
+        im = uint8(im);
+        imwrite(im, [color_gray, imname], 'jpg');
     end
 end
+
 
