@@ -92,8 +92,19 @@ parfor imid = 1 : im_num
         dst_me_pts(:, 2) = dst_me_pts(:, 2) ./ dst_me_pts(:, 3);
         dst_me_pts = dst_me_pts(:, 1 : 2);
         if min(dst_me_pts(:)) < -1 || max(dst_me_pts(:)) > 1
-            disp(['Transformation Incurs Image Out Of Bound: ', imname]);
-            continue
+            corner_deviate = zeros(4, 2);
+            dst_pts = src_pts + corner_deviate;
+            Tform_stn = maketform('projective', src_pts, dst_pts);
+            T = Tform_stn.tdata.T;
+            % CHECK WHETHER ME IS OUT OF BOUND
+            dst_me_pts = src_me_pts * T;
+            dst_me_pts(:, 1) = dst_me_pts(:, 1) ./ dst_me_pts(:, 3);
+            dst_me_pts(:, 2) = dst_me_pts(:, 2) ./ dst_me_pts(:, 3);
+            dst_me_pts = dst_me_pts(:, 1 : 2);
+            if min(dst_me_pts(:)) < -1 || max(dst_me_pts(:)) > 1
+                disp(['Fatal Error For Image : ', color_regular, num2str(imid), '.png']);
+                continue
+            end
         end
     end
     src_img_pts = [1 1; target_w, 1; target_w, target_h; 1, target_h];
