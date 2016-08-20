@@ -7,6 +7,7 @@ color_undisturbed = [data_num, 'undisturbed-bbox-config/'];
 
 mkdir(color_gray)
 mkdir(color_projective);
+mkdir(color_undisturbed);
 
 template2 = [1, 1, 1; 1 1 1; 1 1 1];
 target_w = 512;
