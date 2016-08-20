@@ -3,12 +3,11 @@ color_regular = [data_num, 'color-tex-regular/'];
 color_gray = [data_num, 'gray-tex-images/'];
 color_projective = [data_num, 'projective-param/'];
 color_adjust = [data_num, 'adjust-bbox-config/'];
-if ~isdir(color_gray)
-    mkdir(color_gray)
-end
-if ~isdir(color_projective)
-    mkdir(color_projective);
-end
+color_undisturbed = [data_num, 'undisturbed-bbox-config/'];
+
+mkdir(color_gray)
+mkdir(color_projective);
+
 template2 = [1, 1, 1; 1 1 1; 1 1 1];
 target_w = 512;
 target_h = 512;
@@ -131,6 +130,12 @@ parfor imid = 1 : im_num
         bboxes(:, 5), bboxes(:, 4), ...
         bboxes(:, 3), bboxes(:, 4), ...
         bboxes(:, 7), bboxes(:, 6)];
+    bboxes = [bboxes(:, 1), ...
+        bboxes(:, 3), bboxes(:, 2), ...
+        bboxes(:, 5), bboxes(:, 2), ...
+        bboxes(:, 5), bboxes(:, 4), ...
+        bboxes(:, 3), bboxes(:, 4), ...
+        bboxes(:, 7), bboxes(:, 6)];
     
     
     for bid = 1 : size(bboxes_4p, 1)
@@ -183,6 +188,10 @@ parfor imid = 1 : im_num
     %     end
     %     figure
     %     imshow(uint8(src_im))
+    %% output origin and distorted bounding boxes
+    dlmwrite([color_undisturbed, 'bbox_', num2str(imid), '.config'], bboxes, 'delimiter', ' ');
+    
+    
     %% output T matrix and gray-scale ME image
     T = T';
     T = T(1 : 8);
@@ -210,5 +219,3 @@ parfor imid = 1 : im_num
         imwrite(im, [color_gray, imname], 'jpg');
     end
 end
-
-
