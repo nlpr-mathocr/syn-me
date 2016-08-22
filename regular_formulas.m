@@ -54,7 +54,7 @@ parfor i = 1 : im_num
         GT = gscale;
         gtform = maketform('affine', GT);
         [tmp_gim, gxdata, gydata] = imtransform(im, gtform, 'nearest');
-        [height, ~, ~] = size(tmp_gim);
+        [height, width, ~] = size(tmp_gim);
     end
     rw = max(ceil((target_w - width) / 2), 1);
     rh = max(ceil((target_h - height) / 2), 1);
