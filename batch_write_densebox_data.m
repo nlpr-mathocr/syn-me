@@ -23,8 +23,8 @@ for did = 1 : length(datalist)
             fprintf(densebox_data_fp, ' %g', bboxes(bid, 4));
             fprintf(densebox_data_fp, ' %g', bboxes(bid, 3));
             fprintf(densebox_data_fp, ' %g', bboxes(bid, 2));
-            fprintf(densebox_data_fp, ' %g', bboxes(bid, 10));
             fprintf(densebox_data_fp, ' %g', bboxes(bid, 11));
+            fprintf(densebox_data_fp, ' %g', bboxes(bid, 10));
             fprintf(densebox_data_fp, ' 1 1');
             fprintf(densebox_data_fp, ' %g', (bboxes(bid, 1) + 1));
             fprintf(densebox_data_fp, ' %g', (bboxes(bid, 1) + 1));
