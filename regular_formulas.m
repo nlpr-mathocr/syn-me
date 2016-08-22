@@ -115,5 +115,5 @@ parfor i = 1 : im_num
                 new_point(2), new_point(1)];
         end
     end
-    dlmwrite([color_distort,'/bbox_', num2str(i), '.config'] , distort_config, 'delimiter', '\t');
+    dlmwrite([color_distort,'/bbox_', num2str(i), '.config'] , distort_config, 'delimiter', ' ');
 end
