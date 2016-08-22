@@ -1,7 +1,7 @@
 function regular_formulas(data_num, im_num)
 color_regular = [data_num, 'color-tex-regular/'];
 color_gray = [data_num, 'gray-tex-images/'];
-color_distort = [data_num, 'distort-adjust-bbox-config/'];
+color_distort = [data_num, 'regular-adjust-bbox-config/'];
 color_adjust = [data_num, 'adjust-bbox-config/'];
 color_origin = [data_num, 'adjust-bbox-config/'];
 if ~isdir(color_gray)
