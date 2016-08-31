@@ -1,0 +1,14 @@
+%MAX_ELEMENT_NUM = 30
+%MAX_RECUR_LEVEL = 30
+
+LETTER == 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, \alpha, \beta, \gamma, \delta, \epsilon, \zeta, \eta, \theta, \lambda, \mu, \rho, \sigma, \omega, \tau, \xi, \chi, \kappa, \upsilon, \varepsilon, \Sigma, \Pi, \varrho, \nu, \phi, \varphi, \psi, \vartheta, \Gamma, \Lambda, \Delta, \Phi, \Theta, \Omega, \Psi
+FRAC1 == #C\frac{
+FRAC2 == #NC}{
+FRAC3 == }C#
+OP == \cdot, \subseteq, \backslash, \wedge, \supset, \pm, \supseteq, \prec, \bigwedge, \rtimes, \preceq, \forall, \cup, \oplus, \cap, \otimes, \circ, \nabla, +, -, \times, \div 
+SE => EXP, OP, EXP
+
+EXP => FRAC1, LETTERSTR, FRAC2, LETTERSTR, FRAC3
+EXP => LETTERSTR
+LETTERSTR => LETTERSTR, LETTER
+LETTERSTR => LETTER
