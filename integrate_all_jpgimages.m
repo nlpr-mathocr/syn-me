@@ -1,7 +1,7 @@
 function integrate_all_jpgimages()
 mkdir('gray-tex-images');
-datalist = {'1-', '2-', '3-', '4-', '5-', '61-', '62-', '7-', '8-', '91-', '92-', '93-', '94-', '95-'};
-numlist = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+datalist = {''};
+numlist = 143;
 for did = 1 : length(datalist)
     for i = 1 : numlist(did)
         src_name = [datalist{did}, 'gray-tex-images/', num2str(i), '.jpg'];

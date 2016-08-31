@@ -1,12 +1,12 @@
-function regular_imageformat(data_num, im_num)
-color_tex = [data_num, 'color-tex/'];
-color_regular = [data_num, 'color-tex-regular/'];
-if ~isdir(color_regular)
-    mkdir(color_regular);
+function regular_imageformat(dataset_name, im_num)
+ori_image_dir = [dataset_name, 'color-tex/'];
+regular_image_dir = [dataset_name, 'color-tex-regular/'];
+if ~isdir(regular_image_dir)
+    mkdir(regular_image_dir);
 end
 
-parfor i = 1 : im_num
-    im = imread([color_tex, num2str(i), '.png']);
+for i = 1 : im_num
+    im = imread([ori_image_dir, num2str(i), '.png']);
     [ori_h, ori_w, ~] = size(im);
     regular_w = ori_w;
     regular_h = ori_h;
@@ -18,7 +18,7 @@ parfor i = 1 : im_num
             ori_im = im;
         end
     elseif size(im, 3) == 1
-        [map, lib] = imread([color_tex, num2str(i), '.png']);
+        [map, lib] = imread([ori_image_dir, num2str(i), '.png']);
         lib = lib * 255;
         tmpmap = map(:);
         for j = 1 : size(lib, 1)
@@ -53,6 +53,6 @@ parfor i = 1 : im_num
     tmpy = tmpy(tmpy > 0);
     regular_im = regular_im(tmpy(1) : tmpy(end), tmpx(1) : tmpx(end), :);
     regular_im = uint8(regular_im);
-    imwrite(regular_im, [color_regular, num2str(i), '.png'], 'png');
+    imwrite(regular_im, [regular_image_dir, num2str(i), '.png'], 'png');
 end
 end

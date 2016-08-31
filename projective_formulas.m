@@ -1,27 +1,36 @@
-function projective_formulas(data_num, im_num)
-color_regular = [data_num, 'color-tex-regular/'];
-color_gray = [data_num, 'gray-tex-images/'];
-color_projective = [data_num, 'projective-param/'];
-color_adjust = [data_num, 'adjust-bbox-config/'];
-color_undisturbed = [data_num, 'undisturbed-bbox-config/'];
+function projective_formulas(dataset_name, im_num, proj_type)
+regular_image_dir = [dataset_name, 'color-tex-regular/'];
+projective_image_dir = [dataset_name, 'projective-tex-images/'];
+projective_param_dir = [dataset_name, 'projective-param/'];
+adjust_bbox_dir = [dataset_name, 'adjust-bbox-config/'];
+undisturbed_bbox_dir = [dataset_name, 'undisturbed-bbox-config/'];
+disturbed_bbox_dir = [dataset_name, 'disturbed-bbox-config/'];
 
-mkdir(color_gray)
-mkdir(color_projective);
-mkdir(color_undisturbed);
+mkdir(projective_image_dir)
+mkdir(projective_param_dir);
+mkdir(undisturbed_bbox_dir);
+mkdir(disturbed_bbox_dir);
 
-template2 = [1, 1, 1; 1 1 1; 1 1 1];
+
 target_w = 512;
 target_h = 512;
 stand_w = 32;
 stand_h = 32;
+if strcmp(proj_type, 'proj')
+    global_deviate = 1;
+elseif strcmp(proj_type, 'norm')
+    global_deviate = 0;
+else
+    error('Invalid proj_type : either proj or norm');
+end
 
-parfor imid = 1 : im_num
-    cfgname = [color_adjust, 'bbox_', num2str(imid), '.config'];
+for imid = 1 : im_num
+    cfgname = [adjust_bbox_dir, 'bbox_', num2str(imid), '.config'];
     if ~exist(cfgname, 'file')
         continue;
     end
-    imname = [num2str(imid), '.jpg'];
-    im = imread([color_regular, num2str(imid), '.png']);
+    imname = [num2str(imid), '.png'];
+    im = imread([regular_image_dir, num2str(imid), '.png']);
     
     bboxes = load(cfgname);
     %     % swap centerx centery
@@ -46,8 +55,6 @@ parfor imid = 1 : im_num
     end
     
     bboxes(:, 2 : end) = ceil(bboxes(:, 2 : end) * base_scl);
-    bboxes(:, [2, 4, 6]) = min(max(bboxes(:, [2, 4, 6]), 1), size(im, 1));
-    bboxes(:, [3, 5, 7]) = min(max(bboxes(:, [3, 5, 7]), 1), size(im, 2));
     
     ori_top = ceil(target_h / 2 - size(im, 1) / 2);
     ori_bottom = ori_top + size(im, 1) - 1;
@@ -56,6 +63,9 @@ parfor imid = 1 : im_num
     
     bboxes(:, [2, 4, 6]) = bboxes(:, [2, 4, 6]) + ori_top - 1;
     bboxes(:, [3, 5, 7]) = bboxes(:, [3, 5, 7]) + ori_left - 1;
+    
+%     bboxes(:, [2, 4, 6]) = min(max(bboxes(:, [2, 4, 6]), 1), size(im, 1));
+%     bboxes(:, [3, 5, 7]) = min(max(bboxes(:, [3, 5, 7]), 1), size(im, 2));
     
     ori_img = uint8(zeros(target_h, target_w, 3));
     ori_img(ori_top : ori_bottom, ori_left : ori_right, :) = im;
@@ -73,7 +83,7 @@ parfor imid = 1 : im_num
     trans_deviate = [unifrnd(1 - ori_left, target_w - ori_right) / target_w * 2, unifrnd(1 - ori_top, target_h - ori_bottom) / target_h * 2];
     %     trans_deviate = [max(1 - ori_left, target_w - ori_right) / target_w * 2, max(1 - ori_top, target_h - ori_bottom) / target_h * 2];
     corner_deviate = 0.5 * (rand(4, 2) - 0.5) + repmat(trans_deviate, [4, 1]);
-    dst_pts = src_pts + corner_deviate;
+    dst_pts = src_pts + corner_deviate * global_deviate;
     Tform_stn = maketform('projective', src_pts, dst_pts);
     T = Tform_stn.tdata.T;
     % CHECK WHETHER ME IS OUT OF BOUND
@@ -83,7 +93,7 @@ parfor imid = 1 : im_num
     dst_me_pts = dst_me_pts(:, 1 : 2);
     if min(dst_me_pts(:)) < -1 || max(dst_me_pts(:)) > 1
         corner_deviate = 0.5 * (rand(4, 2) - 0.5);
-        dst_pts = src_pts + corner_deviate;
+        dst_pts = src_pts + corner_deviate * global_deviate;
         Tform_stn = maketform('projective', src_pts, dst_pts);
         T = Tform_stn.tdata.T;
         % CHECK WHETHER ME IS OUT OF BOUND
@@ -93,7 +103,7 @@ parfor imid = 1 : im_num
         dst_me_pts = dst_me_pts(:, 1 : 2);
         if min(dst_me_pts(:)) < -1 || max(dst_me_pts(:)) > 1
             corner_deviate = zeros(4, 2);
-            dst_pts = src_pts + corner_deviate;
+            dst_pts = src_pts + corner_deviate * global_deviate;
             Tform_stn = maketform('projective', src_pts, dst_pts);
             T = Tform_stn.tdata.T;
             % CHECK WHETHER ME IS OUT OF BOUND
@@ -102,13 +112,12 @@ parfor imid = 1 : im_num
             dst_me_pts(:, 2) = dst_me_pts(:, 2) ./ dst_me_pts(:, 3);
             dst_me_pts = dst_me_pts(:, 1 : 2);
             if min(dst_me_pts(:)) < -1 || max(dst_me_pts(:)) > 1
-                disp(['Fatal Error For Image : ', color_regular, num2str(imid), '.png']);
-                continue
+                error(['Fatal Error For Image : ', regular_image_dir, num2str(imid), '.png, Too Big Size !']);
             end
         end
     end
     src_img_pts = [1 1; target_w, 1; target_w, target_h; 1, target_h];
-    dst_img_pts = src_img_pts + round([corner_deviate(:, 1) * target_w / 2, corner_deviate(:, 2) * target_h / 2]);
+    dst_img_pts = src_img_pts + round([corner_deviate(:, 1) * target_w / 2, corner_deviate(:, 2) * target_h / 2]) * global_deviate;
     
     Tform_img = maketform('projective', src_img_pts, dst_img_pts);
     %     T2 = Tform_img.tdata.T;
@@ -190,33 +199,12 @@ parfor imid = 1 : im_num
     %     figure
     %     imshow(uint8(src_im))
     %% output origin and distorted bounding boxes
-    dlmwrite([color_undisturbed, 'bbox_', num2str(imid), '.config'], bboxes, 'delimiter', ' ');
-    
+    dlmwrite([undisturbed_bbox_dir, 'bbox_', num2str(imid), '.config'], bboxes, 'delimiter', ' ');
+    dlmwrite([disturbed_bbox_dir, 'bbox_', num2str(imid), '.config'], bboxes_4p, 'delimiter', ' ');
     
     %% output T matrix and gray-scale ME image
     T = T';
     T = T(1 : 8);
-    dlmwrite([color_projective, 'projective_', num2str(imid), '.config'], T, 'delimiter', ' ');
-    target_im = dst_im;
-    if rand(1) > 0.5
-        target_im = imdilate(target_im, template2);
-        target_im = sum(target_im, 3);
-        target_im = double(target_im == 0) .* 113 + double(target_im > 0) .* 0;
-        target_im=uint8(target_im);
-        imwrite(target_im, [color_gray, imname], 'png');
-    else
-        bklib_num = length(dir('newbackground/*.jpg'));
-        gray_contrast = 60;
-        sigma = 1;
-        gausFilter = fspecial('gaussian', [3 3], sigma);
-        im_ori = uint8(target_im);
-        im_ori = double(rgb2gray(im_ori));
-        bk = rgb2gray(imread(strcat('newbackground/', num2str(ceil(rand(1) * bklib_num)), '.jpg')));
-        bk_mean = mean(bk(:));
-        im = ((bk_mean - gray_contrast) * rand(1)) * double(im_ori > 0);
-        im = im + double(im == 0) .* double(bk);
-        im = imfilter(im, gausFilter, 'replicate');
-        im = uint8(im);
-        imwrite(im, [color_gray, imname], 'jpg');
-    end
+    dlmwrite([projective_param_dir, 'projective_', num2str(imid), '.config'], T, 'delimiter', ' ');
+    imwrite(dst_im, [projective_image_dir, imname], 'png');
 end
