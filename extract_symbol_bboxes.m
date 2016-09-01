@@ -5,7 +5,9 @@ output_bboxes= [];
 
 cc_color = unique(labelmap(:));
 if cc_color(1) ~= 0
-    error('Vital Error in Extracting Connected Components : Background Label is Not Zero !');
+    disp('Vital Error in Extracting Connected Components : Background Label is Not Zero !');
+    output_bboxes= [];
+    return;
 end
 labels = []; % for labels like brackets, they contain multiple labels
 for k = 2 : length(cc_color)
@@ -19,7 +21,9 @@ for k = 2 : length(cc_color)
     ymap = ymap(ymap > 0); % top bottom
     
     if xmap(end) - xmap(1) < 5 && ymap(end) - ymap(1) < 5
-        error([num2str(imid), '.png', ', cc pieces for multi-part label : ', num2str(label)])
+        disp([num2str(imid), '.png', ', cc pieces for multi-part label : ', num2str(label)]);
+        output_bboxes= [];
+        return;
     end
     if label == 98 % sqrt
         bbox = [bbox; ymap(1), xmap(1), ymap(end), xmap(end)]; % top left bottom right
@@ -101,7 +105,7 @@ if label == 19 || ... % i
     if label == 19 || label == 20 || label == 151 % i j ;
         usedcenter = topcenter;
     end
-    output_bboxes = [output_bboxes; group_connected_components(bbox, usedcenter, 2, labels)];
+    output_bboxes = group_connected_components(bbox, usedcenter, 2, labels);
     % top bottom structure, three connected components for each symbol
 elseif label == 67 || ... % div
         label == 162 || ... % equiv
@@ -112,23 +116,23 @@ elseif label == 67 || ... % div
     if label == 164 || label == 176 || label == 178
         usedcenter = bottomcenter;
     end
-    output_bboxes = [output_bboxes; group_connected_components(bbox, usedcenter, 3, labels)];
+    output_bboxes = group_connected_components(bbox, usedcenter, 3, labels);
     % left right structure, two connected components for each symbol
 elseif label == 157 % parallel
     usedcenter = boxcenter;
-    output_bboxes = [output_bboxes; group_connected_components(bbox, usedcenter, 2, labels)];
+    output_bboxes = group_connected_components(bbox, usedcenter, 2, labels);
     % left right structure, three connected components for each symbol
 elseif label == 85 % cdots
     usedcenter = boxcenter;
-    output_bboxes = [output_bboxes; group_connected_components(bbox, usedcenter, 3, labels)];
+    output_bboxes = group_connected_components(bbox, usedcenter, 3, labels);
     % surrounding structure
 elseif label == 140 % Theta
     usedcenter = boxcenter;
-    output_bboxes = [output_bboxes; group_connected_components(bbox, usedcenter, 2, labels)];
+    output_bboxes = group_connected_components(bbox, usedcenter, 2, labels);
     % single connected component for each symbol
 else
     usedcenter = boxcenter;
-    output_bboxes = [output_bboxes; group_connected_components(bbox, usedcenter, 1, labels)];
+    output_bboxes = group_connected_components(bbox, usedcenter, 1, labels);
 end
 end
 
@@ -184,7 +188,9 @@ elseif group_size == 3
             end
         end
         if tmp_pair(2) == tmp_pair(1)
-            error('Invalid Pair for \cdots')
+            disp('Invalid Pair for \cdots');
+            output_bboxes= [];
+            return;
         end
         near_pair = [near_pair; tmp_pair];
     end
@@ -213,7 +219,9 @@ elseif group_size == 3
         output_bboxes = [output_bboxes; labels(j), tmpbbox(1), tmpbbox(2), tmpbbox(3), tmpbbox(4), (tmpbbox(1) + tmpbbox(3)) / 2, (tmpbbox(2) + tmpbbox(4)) / 2];
     end
 else
-    error('Invalid Group Size');
+    disp('Invalid Group Size');
+    output_bboxes= [];
+    return;
 end
 end
 
