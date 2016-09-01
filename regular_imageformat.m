@@ -6,6 +6,9 @@ if ~isdir(regular_image_dir)
 end
 
 for i = 1 : im_num
+    if ~exist([ori_image_dir, num2str(i), '.png'], 'file')
+        continue
+    end
     im = imread([ori_image_dir, num2str(i), '.png']);
     [ori_h, ori_w, ~] = size(im);
     regular_w = ori_w;

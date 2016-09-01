@@ -6,8 +6,11 @@ if ~isdir(adjust_bbox_dir)
 end
 
 for i = 1 : im_num
-    orig_label_bb = load(strcat(ori_bbox_dir, 'bbox_', num2str(i), '.config'));
-    fp_adjt_bb = fopen(strcat(adjust_bbox_dir, 'bbox_', num2str(i), '.config'), 'w');
+    if ~exist([ori_bbox_dir, 'bbox_', num2str(i), '.config'], 'file')
+        continue
+    end
+    orig_label_bb = load([ori_bbox_dir, 'bbox_', num2str(i), '.config']);
+    fp_adjt_bb = fopen([adjust_bbox_dir, 'bbox_', num2str(i), '.config'], 'w');
     for j = 1 : size(orig_label_bb, 1)
         adj_label_bb = adjust_bb_basedon_label(orig_label_bb(j, :));
         for bid = 1 : size(adj_label_bb, 1)

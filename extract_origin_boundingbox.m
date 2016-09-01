@@ -7,6 +7,10 @@ if ~isdir(ori_bbox_dir)
 end
 
 for imid = 1 : im_num
+    if ~exist([color_image_dir, num2str(imid), '.png'], 'file') || ...
+        ~exist([ori_config_dir, 'tex_', num2str(imid), '.config'], 'file')
+        continue
+    end
     im = imread([color_image_dir, num2str(imid), '.png']);
     config_info = load([ori_config_dir, 'tex_', num2str(imid), '.config']);
     hsvim = rgb2hsv(im);

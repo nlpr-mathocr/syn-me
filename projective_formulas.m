@@ -26,10 +26,10 @@ end
 
 for imid = 1 : im_num
     cfgname = [adjust_bbox_dir, 'bbox_', num2str(imid), '.config'];
-    if ~exist(cfgname, 'file')
+    imname = [num2str(imid), '.png'];
+    if ~exist(cfgname, 'file') || ~exist([regular_image_dir, num2str(imid), '.png'])
         continue;
     end
-    imname = [num2str(imid), '.png'];
     im = imread([regular_image_dir, num2str(imid), '.png']);
     
     bboxes = load(cfgname);

@@ -6,6 +6,9 @@ template2 = [1, 1, 1; 1 1 1; 1 1 1];
 
 for imid = 1 : im_num
     imname = [num2str(imid), '.png'];
+    if ~exist([projective_image_dir, imname], 'file')
+        continue
+    end
     ori_im = imread([projective_image_dir, imname]);
     if rand(1) > 0.5
         ori_im = imdilate(ori_im, template2);
