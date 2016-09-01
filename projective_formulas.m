@@ -80,10 +80,14 @@ for imid = 1 : im_num
     src_me_pts(:, 2) = src_me_pts(:, 2) / target_h * 2 - 1;
     src_me_pts = [src_me_pts, ones(4, 1)];
     
+    rot_angle = (rand(1) - 0.5) * 90 / 180 * pi;
+    rot_deviate = [-cos(rot_angle) + sin(rot_angle), -sin(rot_angle) - cos(rot_angle); ...
+        cos(rot_angle) + sin(rot_angle), sin(rot_angle) - cos(rot_angle)];
+    rot_deviate = [rot_deviate; -rot_deviate] - src_pts;
     trans_deviate = [unifrnd(1 - ori_left, target_w - ori_right) / target_w * 2, unifrnd(1 - ori_top, target_h - ori_bottom) / target_h * 2];
     %     trans_deviate = [max(1 - ori_left, target_w - ori_right) / target_w * 2, max(1 - ori_top, target_h - ori_bottom) / target_h * 2];
     corner_deviate = 0.5 * (rand(4, 2) - 0.5) + repmat(trans_deviate, [4, 1]);
-    dst_pts = src_pts + corner_deviate * global_deviate;
+    dst_pts = src_pts + (corner_deviate + rot_deviate) * global_deviate;
     Tform_stn = maketform('projective', src_pts, dst_pts);
     T = Tform_stn.tdata.T;
     % CHECK WHETHER ME IS OUT OF BOUND
@@ -92,8 +96,12 @@ for imid = 1 : im_num
     dst_me_pts(:, 2) = dst_me_pts(:, 2) ./ dst_me_pts(:, 3);
     dst_me_pts = dst_me_pts(:, 1 : 2);
     if min(dst_me_pts(:)) < -1 || max(dst_me_pts(:)) > 1
+        rot_angle = (rand(1) - 0.5) * 90 / 180 * pi;
+        rot_deviate = [-cos(rot_angle) + sin(rot_angle), -sin(rot_angle) - cos(rot_angle); ...
+            cos(rot_angle) + sin(rot_angle), sin(rot_angle) - cos(rot_angle)];
+        rot_deviate = [rot_deviate; -rot_deviate] - src_pts;
         corner_deviate = 0.5 * (rand(4, 2) - 0.5);
-        dst_pts = src_pts + corner_deviate * global_deviate;
+        dst_pts = src_pts + (corner_deviate + rot_deviate) * global_deviate;
         Tform_stn = maketform('projective', src_pts, dst_pts);
         T = Tform_stn.tdata.T;
         % CHECK WHETHER ME IS OUT OF BOUND
@@ -117,7 +125,7 @@ for imid = 1 : im_num
         end
     end
     src_img_pts = [1 1; target_w, 1; target_w, target_h; 1, target_h];
-    dst_img_pts = src_img_pts + round([corner_deviate(:, 1) * target_w / 2, corner_deviate(:, 2) * target_h / 2]) * global_deviate;
+    dst_img_pts = src_img_pts + round([(corner_deviate(:, 1) + rot_deviate(:, 1)) * target_w / 2, (corner_deviate(:, 2) + rot_deviate(:, 2)) * target_h / 2]) * global_deviate;
     
     Tform_img = maketform('projective', src_img_pts, dst_img_pts);
     %     T2 = Tform_img.tdata.T;
