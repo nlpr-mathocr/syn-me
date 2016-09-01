@@ -1,3 +1,4 @@
+# useless now
 0. color_tex.tex 是被着色的tex公式列表, 用于在linux端生成公式图像
 1. color-list.txt 是根据H通道划分颜色之后对应的rbg通道数值
 2. generate_formula.m 是生成单个公式的函数
