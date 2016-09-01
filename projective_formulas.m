@@ -27,7 +27,7 @@ end
 for imid = 1 : im_num
     cfgname = [adjust_bbox_dir, 'bbox_', num2str(imid), '.config'];
     imname = [num2str(imid), '.png'];
-    if ~exist(cfgname, 'file') || ~exist([regular_image_dir, num2str(imid), '.png'])
+    if ~exist(cfgname, 'file') || ~exist([regular_image_dir, num2str(imid), '.png'], 'file')
         continue;
     end
     im = imread([regular_image_dir, num2str(imid), '.png']);
